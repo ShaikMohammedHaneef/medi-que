@@ -74,7 +74,6 @@ The database stores and manages application data, including:
 * Patients
 * Hospital Staff
 * Departments
-* Appointments
 * Queue Tokens
 
 
