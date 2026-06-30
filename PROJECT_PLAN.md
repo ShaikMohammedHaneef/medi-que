@@ -104,7 +104,6 @@ PostgreSQL Database
 ### Main Entities
 
 * Patient
-* Appointment
 * Queue
 * Doctor
 * Receptionist
