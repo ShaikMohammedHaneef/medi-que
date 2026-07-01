@@ -100,7 +100,10 @@ CREATE TABLE patient (
     full_name VARCHAR(100) NOT NULL,
     date_of_birth DATE NOT NULL,
     gender gender NOT NULL,
-    phone_number VARCHAR(15) NOT NULL UNIQUE
+    phone_number VARCHAR(15) NOT NULL,
+
+    CONSTRAINT uq_patient_identity
+    UNIQUE (full_name, date_of_birth, phone_number)
 );
 
 -- ============================================================

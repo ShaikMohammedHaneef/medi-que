@@ -6,9 +6,9 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 | Stakeholder | Description |
 | :---------- | :---------- | 
 | **Patients** | Book appointments, receive queue tokens, track their queue status, and view estimated waiting times. | 
-| **Doctors** | View their daily appointment queue, call the next patient, mark consultations as completed, and monitor their schedule. | 
+| **Doctors** | View their daily appointment queue, call the next patient, mark consultations as completed, and manage their availability. | 
 | **Receptionists** | Schedule appointments, generate queue tokens, and assist with queue management. | 
-| **Hospital Administrators** | Manage doctors, departments, schedules, and monitor overall hospital operations through the admin dashboard. | 
+| **Hospital Administrators** | Manage doctors, departments, and monitor overall hospital operations through the admin dashboard. | 
 
 
 ## 2. Functional Requirements
@@ -16,11 +16,12 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 
 | ID | Requirement |
 |----|-------------|
-| FR-1.1 | The system shall allow hospital administrators to create accounts for doctors and receptionists. |
-| FR-1.2 | The system shall allow hospital staff to log in using their email and password. |
-| FR-1.3 | The system shall authenticate users using JWT-based authentication. |
-| FR-1.4 | The system shall restrict access to resources based on user roles. |
-| FR-1.5 | The system shall allow authenticated users to securely log out. |
+|FR-1.1|The system shall allow registration of the first administrator if no administrator account exists.|
+| FR-1.2 | The system shall allow hospital administrators to create accounts for doctors and receptionists. |
+| FR-1.3 | The system shall allow hospital staff to log in using their email and password. |
+| FR-1.4 | The system shall authenticate users using JWT-based authentication. |
+| FR-1.5 | The system shall restrict access to resources based on user roles. |
+| FR-1.6 | The system shall allow authenticated users to securely log out. |
 
 
 ### 2.2  👤 Patient Management
@@ -41,7 +42,7 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 | FR-3.2 | The system shall allow doctors to call the next patient in the queue. |
 | FR-3.3 | The system shall allow doctors to mark a consultation as completed. |
 | FR-3.4 | The system shall automatically update the queue after each completed consultation. |
-| FR-3.5 | The system shall allow doctors to view their daily schedule. |
+| FR-3.5 | The system shall allow doctors to update their availability status. |
 
 ### 2.4  👩‍💼 Receptionist Management
 
@@ -59,7 +60,7 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 |----|-------------|
 | FR-5.1 | The system shall allow administrators to manage doctor accounts. |
 | FR-5.2 | The system shall allow administrators to manage departments. |
-| FR-5.3 | The system shall allow administrators to configure doctor schedules. |
+| FR-5.3 | The system shall allow administrators to activate or deactivate doctors. |
 | FR-5.4 |The system shall allow administrators to monitor appointments and queue status.|
 
 ### 2.6 📋 Queue Management
@@ -93,13 +94,23 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 | ID | Rule |
 |----|------|
 | BR-1.1 | Each patient shall receive a unique queue token for every confirmed OP appointment. |
-| BR-1.2 | A patient shall have only one active queue token for the same doctor on the same day. |
+|BR-1.2 | A patient shall have only one active queue token (WAITING or IN_PROGRESS) at a time.|
 | BR-1.3 | Queue tokens shall be assigned in sequential order. |
 | BR-1.4 | Doctors shall call patients in the order of their queue tokens. |
 | BR-1.5 | A completed consultation shall remove the patient from the active queue. |
 | BR-1.6 | Only authenticated hospital staff shall have access to the management dashboard. |
 | BR-1.7 | Queue information shall be updated immediately after a patient is called or a consultation is completed. |
 | BR-1.8 | Walk-in patients and online bookings shall be managed within the same queue. |
+| BR-1.9| A patient shall be identified by the combination of **full name, date of birth, and phone number**. If an existing patient record matches all three values, the system shall reuse the existing record; otherwise, a new patient record shall be created. |
+| BR-1.10| A patient may cancel an OP appointment only while the queue token status is **WAITING**.|
+| BR-1.11 | Doctors marked as unavailable shall not accept new OP bookings.|
+| BR-1.12 | Queue token numbers shall reset at the beginning of each day.|
+| BR-1.13| Patients shall select a department before choosing a doctor for OP booking.|
+| BR-1.14 | Staff accounts shall be created only by hospital administrators. Public staff registration shall not be allowed.|
+| BR-1.15 | Authorized hospital staff may update patient information, such as phone number, when required. |
+| BR-1.16 | If a patient's full name and date of birth match an existing record but the phone number differs, the patient's identity shall be verified by receptionist before updating the existing phone number. |
+|BR-1.17|The system shall allow registration of only the first administrator. Once an administrator account has been created, additional administrator registrations shall not be permitted.|
+
 
 ## 5. Assumptions
 

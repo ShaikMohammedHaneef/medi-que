@@ -14,8 +14,8 @@ The **Department** table stores the hospital departments available in the system
 
 ### Columns
 
-| Column          | Data Type    | Constraints            | Description                                 |
-| --------------- | ------------ | ---------------------- | ------------------------------------------- |
+| Column| Data Type| Constraints| Description|
+| ----- | -------- | ---------- | ---------- |
 | `department_id` | BIGSERIAL    | Primary Key            | Unique identifier for the department.       |
 | `name`          | VARCHAR(100) | NOT NULL, UNIQUE       | Name of the department.                     |
 | `description`   | TEXT         | NULL                   | Short description of the department.        |
@@ -132,8 +132,8 @@ The **Administrator** table stores the information of hospital administrators. A
 
 ### Columns
 
-| Column             | Data Type    | Constraints            | Description                                            |
-| ------------------ | ------------ | ---------------------- | ------------------------------------------------------ |
+| Column| Data Type| Constraints| Description|
+| ------| ---------| ---------- | ---------- |
 | `administrator_id` | BIGSERIAL    | Primary Key            | Unique identifier for the administrator.               |
 | `full_name`        | VARCHAR(100) | NOT NULL               | Full name of the administrator.                        |
 | `email`            | VARCHAR(100) | NOT NULL, UNIQUE       | Administrator's email address used for login.          |
@@ -174,7 +174,7 @@ The **Patient** table stores the information of patients booking OP appointments
 | `full_name`     | VARCHAR(100) | NOT NULL         | Full name of the patient.          |
 | `date_of_birth` | DATE         | NOT NULL         | Patient's date of birth.           |
 | `gender`        | ENUM  | NOT NULL| Patient's gender.|
-| `phone_number`  | VARCHAR(15)  | NOT NULL, UNIQUE | Patient's contact number.          |
+| `phone_number`  | VARCHAR(15)  | NOT NULL, | Patient's contact number.          |
 
 ### Primary Key
 
@@ -189,8 +189,9 @@ The **Patient** table stores the information of patients booking OP appointments
 * `patient_id` → Primary Key.
 * `full_name` → Required.
 * `date_of_birth` → Required.
-* `gender` → Required and must be one of: MALE, FEMALE, OTHER.
-* `phone_number` → Required and unique.
+* `gender` → Required and must be one of: `MALE`, `FEMALE`, `OTHER`.
+* `phone_number` → Required.
+* The combination of `full_name`, `date_of_birth`, and `phone_number` must be unique.
 
 <br>
 
