@@ -70,8 +70,8 @@ The MediQue REST APIs are organized into the following modules.
 | POST | `/patients/book` | Book a new OP appointment and generate a queue token. | No |
 | GET | `/patients/track/{tokenNumber}` | Retrieve the current queue status, queue position, and estimated waiting time. | No |
 | PATCH | `/patients/cancel/{tokenNumber}` | Cancel an OP appointment while its status is `WAITING`. | No |
-| GET    | `/patients/departments`                        | Retrieve all active departments.                           | No             |
-| GET    | `/patients/departments/{departmentId}/doctors` | Retrieve all active & available doctors in the selected department. | No             |
+| GET    | `/patients/departments` | Retrieve all active departments. | No |
+| GET    | `/patients/departments/{departmentId}/doctors` | Retrieve all active & available doctors in the selected department. | No|
 
 
 ---
@@ -143,8 +143,9 @@ MediQue uses **WebSockets (STOMP)** to broadcast real-time queue updates to conn
 
 | Endpoint | Description |
 |----------|-------------|
-| `/topic/queue/{doctorId}` | Broadcasts queue updates for a specific doctor's queue. |
+| `/topic/queue/{doctorCode}` | Broadcasts queue updates for a specific doctor's queue. |
 | `/app/queue/update` | Publishes queue update events from the backend. |
+
 
 Whenever a queue changes, connected clients automatically receive updated queue information without refreshing the page.
 

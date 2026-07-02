@@ -80,7 +80,7 @@ MediQue/
 │   ├── api/
 │   ├── diagrams/
 │   ├── screenshots/
-│   ├── requirements.md
+│   ├── REQUIREMENTS.md
 │   └── architecture.md
 │
 ├── PROJECT_PLAN.md
