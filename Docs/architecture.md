@@ -1,6 +1,6 @@
 # System Architecture
 
-![MediQue System Architecture](architecture-diagram.png)
+![MediQue System Architecture](./diagrams/architecture-diagram.png)
 
 ## 1. Overview
 
