@@ -39,7 +39,7 @@ CREATE TYPE queue_status AS ENUM (
 CREATE TABLE department (
     department_id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT,
+    description TEXT NOT NULL ,
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
