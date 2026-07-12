@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
-    public List<Department> findByIsActiveTrue();
+    public List<Department> findByIsActiveTrueOrderByNameAsc();
+
+    public List<Department> findAllByOrderByNameAsc();
 }

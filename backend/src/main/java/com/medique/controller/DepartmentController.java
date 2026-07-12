@@ -25,4 +25,9 @@ public class DepartmentController {
     public ResponseEntity<List<Department>> getAllActiveDepartments(){
         return new ResponseEntity<>(departmentService.getAllActiveDepartments(), HttpStatus.OK);
     }
+
+    @GetMapping("/admin/departments")
+    public ResponseEntity<List<Department>> getAllDepartments(){
+        return new ResponseEntity<>(departmentService.getAllDepartments(), HttpStatus.OK);
+    }
 }

@@ -17,24 +17,10 @@ public class DepartmentService {
     }
 
     public List<Department> getAllActiveDepartments(){
-        return departmentRepository.findByIsActiveTrue();
+        return departmentRepository.findByIsActiveTrueOrderByNameAsc();
     }
 
     public List<Department> getAllDepartments(){
-        return departmentRepository.findAll();
-    }
-
-    public void createDepartment(Department department){
-
-    }
-
-    public void updateDepartment(Long departmentId, Department department){
-
-    }
-    public void activateDepartment(Long departmentId){
-
-    }
-    public void deactivateDepartment(Long departmentId){
-
+        return departmentRepository.findAllByOrderByNameAsc();
     }
 }
