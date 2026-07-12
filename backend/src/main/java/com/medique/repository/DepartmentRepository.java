@@ -10,4 +10,6 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
     public List<Department> findByIsActiveTrueOrderByNameAsc();
 
     public List<Department> findAllByOrderByNameAsc();
+
+    public boolean existsByName(String name);
 }
