@@ -56,6 +56,7 @@ CREATE TABLE doctor (
     phone_number VARCHAR(15) NOT NULL UNIQUE,
     qualification VARCHAR(100) NOT NULL,
     department_id BIGINT NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_available BOOLEAN NOT NULL DEFAULT TRUE,
 
     CONSTRAINT fk_doctor_department
