@@ -2,14 +2,16 @@ package com.medique.dto.response;
 
 import lombok.*;
 
+
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class DepartmentResponse {
+public class DepartmentAdminResponse {
 
     private Long departmentId;
     private String name;
     private String description;
+    private boolean isActive;
 }

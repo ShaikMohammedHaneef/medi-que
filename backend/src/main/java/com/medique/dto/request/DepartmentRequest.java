@@ -1,11 +1,13 @@
 package com.medique.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-public class CreateDepartmentRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class DepartmentRequest {
     private String name;
     private String description;
 }
