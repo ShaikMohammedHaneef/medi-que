@@ -5,7 +5,7 @@ import com.medique.dto.response.DepartmentAdminResponse;
 import com.medique.dto.response.DepartmentResponse;
 import com.medique.entity.Department;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class DepartmentMapper {

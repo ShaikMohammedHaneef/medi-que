@@ -31,11 +31,7 @@ public class DepartmentService {
     }
 
     public DepartmentResponse getDepartment(Long departmentId) {
-        Department department = departmentRepository
-                .findById(departmentId)
-                .orElseThrow(() -> new DepartmentNotFoundException("Department not found with id:" + departmentId));
-
-        return DepartmentMapper.toResponse(department);
+        return DepartmentMapper.toResponse(findDepartmentOrThrow(departmentId));
     }
 
     public DepartmentResponse createDepartment(DepartmentRequest request) {
@@ -50,8 +46,7 @@ public class DepartmentService {
 
     public DepartmentAdminResponse updateDepartment(Long departmentId, DepartmentRequest request) {
 
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(()-> new DepartmentNotFoundException("Department not found with id : " + departmentId));
+        Department department = findDepartmentOrThrow(departmentId);
 
         if( !department.getName().equals(request.getName()) && departmentRepository.existsByName(request.getName()) ){
             throw new DepartmentAlreadyExistsException("Department with name '" + request.getName() + "' already Exists");
@@ -64,18 +59,19 @@ public class DepartmentService {
     }
 
     public DepartmentAdminResponse activateDepartment(Long departmentId) {
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(()-> new DepartmentNotFoundException("Department not found with id : " + departmentId));
-
+        Department department = findDepartmentOrThrow(departmentId);
         department.setActive(true);
         return DepartmentMapper.toAdminResponse(departmentRepository.save(department));
     }
 
     public DepartmentAdminResponse deactivateDepartment(Long departmentId) {
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(()-> new DepartmentNotFoundException("Department not found with id : " + departmentId));
-
+        Department department = findDepartmentOrThrow(departmentId);
         department.setActive(false);
         return DepartmentMapper.toAdminResponse(departmentRepository.save(department));
+    }
+
+    private Department findDepartmentOrThrow(Long departmentId){
+        return departmentRepository.findById(departmentId)
+                .orElseThrow(()-> new DepartmentNotFoundException("Department not found with id : " + departmentId));
     }
 }
