@@ -17,4 +17,10 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             ORDER BY d.fullName ASC
             """)
     List<Doctor> findActiveAndAvailableDoctorsByDepartment(@Param("departmentId") Long departmentId);
+
+    boolean existsByDoctorCode(String doctorCode);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

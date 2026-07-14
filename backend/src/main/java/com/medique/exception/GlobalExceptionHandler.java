@@ -15,21 +15,64 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DepartmentAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleDepartmentAlreadyExists(DepartmentAlreadyExistsException e, HttpServletRequest request) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                e.getMessage(),
-                request.getRequestURI()));
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
     }
 
     @ExceptionHandler(DepartmentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDepartmentNotFound(DepartmentNotFoundException e, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                e.getMessage(),
-                request.getRequestURI()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
     }
+
+    @ExceptionHandler(DoctorAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleDoctorAlreadyExists(DoctorAlreadyExistsException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+
+    }
+
+    @ExceptionHandler(DepartmentInactiveException.class)
+    public ResponseEntity<ErrorResponse> handleDepartmentInactive(DepartmentInactiveException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+
+    }
+
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDoctorNotFound(DoctorNotFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+    }
+
 }
