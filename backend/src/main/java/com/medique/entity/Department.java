@@ -20,6 +20,7 @@ public class Department {
     private String name;
     @Column(nullable = false)
     private String description;
+    @Builder.Default
     @Column(name = "is_active",nullable = false)
     private boolean isActive = true;
 }

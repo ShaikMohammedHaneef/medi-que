@@ -7,7 +7,6 @@ import com.medique.dto.response.DoctorResponse;
 import com.medique.entity.Department;
 import com.medique.entity.Doctor;
 import com.medique.exception.*;
-import com.medique.mapper.DepartmentMapper;
 import com.medique.mapper.DoctorMapper;
 import com.medique.repository.DepartmentRepository;
 import com.medique.repository.DoctorRepository;
