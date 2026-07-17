@@ -75,4 +75,28 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(ReceptionistNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleReceptionistNotFound(ReceptionistNotFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+
+    }
+
+    @ExceptionHandler(ReceptionistAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleReceptionistAlreadyExists(ReceptionistAlreadyExistsException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+    }
 }

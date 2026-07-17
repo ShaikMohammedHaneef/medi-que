@@ -4,4 +4,7 @@ import com.medique.entity.Receptionist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReceptionistRepository extends JpaRepository<Receptionist, Long> {
+    boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

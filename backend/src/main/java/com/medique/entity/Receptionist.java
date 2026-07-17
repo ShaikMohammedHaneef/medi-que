@@ -27,5 +27,6 @@ public class Receptionist {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
+
 }
 
