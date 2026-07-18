@@ -128,7 +128,7 @@ The **Receptionist** table stores the information of hospital receptionists. Rec
 
 ## Purpose
 
-The **Administrator** table stores the information of hospital administrators. Administrators can log in to the system, manage doctors, departments, and monitor the overall operation of the MediQue system.
+The **Administrator** table Stores the default administrator account used to manage the MediQue system. Only one administrator account exists.
 
 ### Columns
 

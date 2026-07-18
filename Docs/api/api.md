@@ -28,7 +28,7 @@ MediQue uses **JWT (JSON Web Token)** based authentication for hospital staff.
 
 The system supports the following authentication workflow:
 
-- The first administrator registers using the administrator registration endpoint. This endpoint is available only if no administrator account exists.
+- During system initialization, a default administrator account is created. The administrator logs in using the configured credentials and manages the system..
 - After successful registration, the administrator logs in using their email and password.
 - The administrator creates accounts for doctors and receptionists.
 - Doctors and receptionists authenticate using their assigned credentials.
@@ -57,7 +57,6 @@ The MediQue REST APIs are organized into the following modules.
 
 | Method | Endpoint | Description | Authentication |
 |--------|----------|-------------|----------------|
-| POST | `/auth/register-admin` | Register the first administrator. Available only if no administrator account exists. | No |
 | POST | `/auth/login` | Authenticate hospital staff and generate a JWT access token. | No |
 | POST | `/auth/logout` | Logout the authenticated user. | Yes |
 

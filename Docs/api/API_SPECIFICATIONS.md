@@ -9,54 +9,7 @@ Each API specification includes the endpoint, authentication requirements, reque
 
 # 1. Authentication APIs
 
-## 1.1 Register First Administrator
-
-### Purpose
-
-Registers the first administrator of the MediQue system. This endpoint is available only if no administrator account exists.
-
-### Endpoint
-
-| Property | Value |
-|----------|-------|
-| Method | POST |
-| Endpoint | `/auth/register-admin` |
-| Authentication | Not Required |
-
-### Request Body
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| fullName | String | Yes | Administrator's full name. |
-| email | String | Yes | Email address used for login. |
-| password | String | Yes | Account password. |
-| phoneNumber | String | Yes | Contact number. |
-
-### Success Response
-
-| Status | Description |
-|--------|-------------|
-| 201 Created | Administrator account created successfully. |
-
-### Error Responses
-
-| Status | Description |
-|--------|-------------|
-| 400 Bad Request | Invalid request data. |
-| 409 Conflict | Administrator already exists or email already exists. |
-
-### Business Rules
-
-- Only one administrator can exist.
-- Registration is allowed only when no administrator account exists.
-- Password must be stored in encrypted form.
-
-### Notes
-
-- This endpoint becomes unavailable after successful administrator registration.
-
-
-## 1.2 Staff Login
+## 1.1 Staff Login
 
 ### Purpose
 
@@ -104,7 +57,7 @@ Authenticates a hospital staff member and returns a JWT access token for accessi
 - Patients do not use this endpoint because they do not require an account.
 
 
-## 1.3 Staff Logout
+## 1.2 Staff Logout
 
 ### Purpose
 

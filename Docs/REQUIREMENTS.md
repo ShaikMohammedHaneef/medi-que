@@ -16,7 +16,7 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 
 | ID | Requirement |
 |----|-------------|
-|FR-1.1|The system shall allow registration of the first administrator if no administrator account exists.|
+|FR-1.1|The system shall provide a default administrator account during initial system setup.|
 | FR-1.2 | The system shall allow hospital administrators to create accounts for doctors and receptionists. |
 | FR-1.3 | The system shall allow hospital staff to log in using their email and password. |
 | FR-1.4 | The system shall authenticate users using JWT-based authentication. |
@@ -108,9 +108,9 @@ Stakeholders are the individuals or groups who interact with or are affected by 
 | BR-1.13 | Patients shall select a department before choosing a doctor for OP booking.                                                                                                                                                                               |
 | BR-1.14 | Staff accounts shall be created only by hospital administrators. Public staff registration shall not be allowed.                                                                                                                                          |
 | BR-1.15 | Authorized hospital staff may update patient information, such as phone number, when required.                                                                                                                                                            |
-| BR-1.16 | If a patient's full name and date of birth match an existing record but the phone number differs, the patient's identity shall be verified by receptionist before updating the existing phone number.                                                     |
-| BR-1.17 | The system shall allow registration of only the first administrator. Once an administrator account has been created, additional administrator registrations shall not be permitted.                                                                       |
-| BR-1.18 | Doctors shall be assigned to exactly one department.                                                                                                                                                                                                      |
+| BR-1.16 | If a patient's full name and date of birth match an existing record but the phone number differs, the patient's identity shall be verified by receptionist before updating the existing phone number.|
+| BR-1.17 |The system shall maintain exactly one administrator account. This account is a system account used to manage MediQue and is not tied to a specific individual.|
+| BR-1.18 | Doctors shall be assigned to exactly one department.|
 | BR-1.19 | Doctor codes shall be unique within the hospital.                                                                                                                                                                                                         |
 | BR-1.20 | A doctor may be created only under an existing and active department.                                                                                                                                                                                     |
 | BR-1.21 | Doctors marked as **inactive** shall not receive new OP bookings or access the system.                                                                                                                                                                    |
