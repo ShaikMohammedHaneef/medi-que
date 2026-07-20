@@ -8,6 +8,7 @@ import com.medique.exception.ReceptionistAlreadyExistsException;
 import com.medique.exception.ReceptionistNotFoundException;
 import com.medique.mapper.ReceptionistMapper;
 import com.medique.repository.ReceptionistRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +17,13 @@ import java.util.List;
 public class ReceptionistService {
 
     private final ReceptionistRepository receptionistRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ReceptionistService(ReceptionistRepository receptionistRepository) {
+    public ReceptionistService(ReceptionistRepository receptionistRepository, PasswordEncoder passwordEncoder) {
         this.receptionistRepository = receptionistRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     private Receptionist findReceptionistOrThrow(Long receptionistId) {
         return receptionistRepository.findById(receptionistId)
@@ -44,7 +48,9 @@ public class ReceptionistService {
             throw new ReceptionistAlreadyExistsException(
                     "Receptionist already exists with phone number '" + request.getPhoneNumber() + "'");
         }
-        return ReceptionistMapper.toResponse(receptionistRepository.save(ReceptionistMapper.toEntity(request)));
+        Receptionist receptionist = ReceptionistMapper.toEntity(request);
+        receptionist.setPassword(passwordEncoder.encode(request.getPassword()));
+        return ReceptionistMapper.toResponse(receptionistRepository.save(receptionist));
     }
 
     public ReceptionistResponse updateReceptionist(Long receptionistId, ReceptionistRequest request) {

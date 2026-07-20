@@ -29,7 +29,6 @@ public class ReceptionistMapper {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
-                .password(request.getPassword())
                 .build();
     }
 }

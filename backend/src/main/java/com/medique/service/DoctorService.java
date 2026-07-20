@@ -10,6 +10,7 @@ import com.medique.exception.*;
 import com.medique.mapper.DoctorMapper;
 import com.medique.repository.DepartmentRepository;
 import com.medique.repository.DoctorRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,16 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DoctorService(DoctorRepository doctorRepository, DepartmentRepository departmentRepository) {
+    public DoctorService(
+            DoctorRepository doctorRepository,
+            DepartmentRepository departmentRepository,
+            PasswordEncoder passwordEncoder) {
+
         this.doctorRepository = doctorRepository;
         this.departmentRepository = departmentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private Department findDepartmentOrThrow(Long departmentId) {
@@ -59,6 +66,7 @@ public class DoctorService {
         }
         Doctor doctor = DoctorMapper.toEntity(request);
         doctor.setDepartment(department);
+        doctor.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return DoctorMapper.toAdminResponse(doctorRepository.save(doctor));
     }

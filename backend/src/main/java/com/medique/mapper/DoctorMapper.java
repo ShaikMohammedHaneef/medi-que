@@ -30,7 +30,6 @@ public class DoctorMapper {
                 .doctorCode(request.getDoctorCode())
                 .fullName(request.getFullName())
                 .email(request.getEmail())
-                .password(request.getPassword())
                 .phoneNumber(request.getPhoneNumber())
                 .qualification(request.getQualification())
                 .build();

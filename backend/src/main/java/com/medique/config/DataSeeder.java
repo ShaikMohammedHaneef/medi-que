@@ -2,16 +2,24 @@ package com.medique.config;
 
 import com.medique.entity.Administrator;
 import com.medique.repository.AdministratorRepository;
+
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
 
     private final AdministratorRepository administratorRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public DataSeeder(AdministratorRepository administratorRepository, PasswordEncoder passwordEncoder) {
+        this.administratorRepository = administratorRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(DataSeeder.class);
 
@@ -27,9 +35,6 @@ public class DataSeeder implements CommandLineRunner {
     @Value("${admin.phone-number}")
     private String phoneNumber;
 
-    public DataSeeder(AdministratorRepository administratorRepository) {
-        this.administratorRepository = administratorRepository;
-    }
 
     @Override
     public void run(String... args) {
@@ -37,7 +42,7 @@ public class DataSeeder implements CommandLineRunner {
             Administrator administrator = Administrator.builder()
                     .fullName(fullName)
                     .email(email)
-                    .password(password)
+                    .password(passwordEncoder.encode(password))
                     .phoneNumber(phoneNumber)
                     .build();
             administratorRepository.save(administrator);
