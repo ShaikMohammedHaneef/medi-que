@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
@@ -23,4 +24,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
+    Optional<Doctor> findByEmail(String email);
 }
