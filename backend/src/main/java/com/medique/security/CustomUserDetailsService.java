@@ -64,7 +64,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     List.of(new SimpleGrantedAuthority("ROLE_RECEPTIONIST"))
             );
         }
-        throw new UsernameNotFoundException("User not found with email '"+username+"'");
+        throw new UsernameNotFoundException("Invalid email or password");
 
     }
 }
