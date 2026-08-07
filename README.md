@@ -93,11 +93,11 @@ MediQue/
 
 Detailed project documentation is available in the `docs/` directory.
 
-- [Requirements Specification](docs/requirements.md)
+- [Requirements Specification](docs/REQUIREMENTS.md)
 - [Project Plan](PROJECT_PLAN.md)
-- [System Architecture](docs/diagrams/architecture.md)
+- [System Architecture](docs/architecture.md)
 - [Database Design](database/README.md)
-- [API Documentation](docs/api/README.md)
+- [API Documentation](docs/api/api.md)
 
 
 # Installation
