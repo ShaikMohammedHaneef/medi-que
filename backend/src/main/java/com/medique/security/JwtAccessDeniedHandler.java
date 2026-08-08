@@ -28,7 +28,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .error(HttpStatus.FORBIDDEN.getReasonPhrase())
                 .status(HttpStatus.FORBIDDEN.value())
-                .message(e.getMessage())
+                .message("You do not have permission to access this resource")
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now())
                 .build();

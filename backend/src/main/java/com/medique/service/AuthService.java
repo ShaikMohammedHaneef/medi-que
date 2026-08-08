@@ -37,7 +37,7 @@ public class AuthService {
                     .build();
 
         } catch (BadCredentialsException e){
-            throw new BadCredentialsException("invalid Email or Password");
+            throw new BadCredentialsException("invalid email or password");
         }
     }
 }
