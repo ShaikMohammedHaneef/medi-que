@@ -112,4 +112,30 @@ public class GlobalExceptionHandler {
                         request.getRequestURI())
                 );
     }
+
+
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePatientNotFound(PatientNotFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+
+    }
+
+    @ExceptionHandler(PatientAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlePatientAlreadyExists(PatientAlreadyExistsException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+    }
 }
