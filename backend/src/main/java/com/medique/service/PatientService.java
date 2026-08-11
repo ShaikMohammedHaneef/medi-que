@@ -7,34 +7,30 @@ import com.medique.dto.response.TokenBookingResponse;
 import com.medique.entity.Doctor;
 import com.medique.entity.Patient;
 import com.medique.entity.QueueToken;
-import com.medique.enums.QueueStatus;
-import com.medique.exception.ActiveBookingExistsException;
 import com.medique.exception.DoctorNotFoundException;
 import com.medique.exception.PatientAlreadyExistsException;
 import com.medique.exception.PatientNotFoundException;
 import com.medique.mapper.PatientMapper;
 import com.medique.repository.DoctorRepository;
 import com.medique.repository.PatientRepository;
-import com.medique.repository.QueueTokenRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class PatientService {
 
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-    private final QueueTokenRepository queueTokenRepository;
+    private final QueueTokenService queueTokenService;
 
     public PatientService(PatientRepository patientRepository,
                           DoctorRepository doctorRepository,
-                          QueueTokenRepository queueTokenRepository) {
+                          QueueTokenService queueTokenService) {
 
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
-        this.queueTokenRepository = queueTokenRepository;
+        this.queueTokenService = queueTokenService;
+
     }
 
     private Patient findPatientOrThrow(Long patientId) {
@@ -85,49 +81,14 @@ public class PatientService {
             return patientRepository.save(newPatient);
         });
 
-        boolean hasActiveToken = queueTokenRepository.existsByPatientPatientIdAndQueueStatusIn(
-                patient.getPatientId(),
-                List.of(QueueStatus.WAITING,
-                        QueueStatus.IN_PROGRESS));
-
-        if (hasActiveToken) {
-            throw new ActiveBookingExistsException("Patient already has an active booking");
-        }
-
-        QueueToken latestToken = queueTokenRepository.findTopByDoctorDoctorIdAndBookingDateOrderByQueueTokenIdDesc(
-                        doctor.getDoctorId(),
-                        LocalDate.now())
-                .orElse(null);
-
-        String token;
-
-        if (latestToken == null) {
-            token = doctor.getDoctorCode() + "-" + "001";
-        } else {
-            String lastTokenNumber = latestToken.getTokenNumber();
-
-            int nextSequence = Integer.parseInt(lastTokenNumber.substring(lastTokenNumber.indexOf("-") + 1)) + 1;
-
-            token = doctor.getDoctorCode() + "-" + String.format("%03d", nextSequence);
-        }
-
-        QueueToken queueToken = QueueToken.builder()
-                .tokenNumber(token)
-                .patient(patient)
-                .doctor(doctor)
-                .queueStatus(QueueStatus.WAITING)
-                .bookingDate(LocalDate.now())
-                .build();
-
-        QueueToken savedQueueToken = queueTokenRepository.save(queueToken);
-
+        QueueToken savedQueueToken = queueTokenService.createQueueToken(patient, doctor);
 
         return TokenBookingResponse.builder()
                 .patientId(patient.getPatientId())
                 .doctorId(doctor.getDoctorId())
                 .tokenNumber(savedQueueToken.getTokenNumber())
                 .doctorName(doctor.getFullName())
-                .status(savedQueueToken.getQueueStatus().name())
+                .status(savedQueueToken.getStatus().name())
                 .bookingDate(savedQueueToken.getBookingDate())
                 .build();
     }

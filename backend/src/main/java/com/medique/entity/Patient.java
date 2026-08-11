@@ -3,6 +3,8 @@ package com.medique.entity;
 import com.medique.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 
@@ -35,6 +37,7 @@ public class Patient {
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "gender", nullable = false)
     private Gender gender;
 

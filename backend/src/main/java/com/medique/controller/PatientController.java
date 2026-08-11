@@ -5,14 +5,11 @@ import com.medique.dto.request.PatientRequest;
 import com.medique.dto.request.TokenBookingRequest;
 import com.medique.dto.response.PatientResponse;
 import com.medique.dto.response.TokenBookingResponse;
-import com.medique.entity.Patient;
-import com.medique.mapper.PatientMapper;
 import com.medique.service.PatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api")

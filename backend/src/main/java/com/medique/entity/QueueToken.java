@@ -3,9 +3,11 @@ package com.medique.entity;
 import com.medique.enums.QueueStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "queue_token",
@@ -39,12 +41,14 @@ public class QueueToken {
     private Doctor doctor;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "queue_status", nullable = false)
-    private QueueStatus queueStatus;
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "status", nullable = false)
+    private QueueStatus status;
 
     @Column(name = "booking_date", nullable = false)
     private LocalDate bookingDate;
 
+    @Builder.Default
     @Column(name = "booked_at", nullable = false)
-    private LocalTime bookedAt = LocalTime.now();
+    private LocalDateTime bookedAt = LocalDateTime.now();
 }

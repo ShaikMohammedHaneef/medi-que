@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
 
-    boolean existsByPatientPatientIdAndQueueStatusIn(Long patientId, Collection<QueueStatus> statuses);
+    boolean existsByPatientPatientIdAndStatusIn(Long patientId, Collection<QueueStatus> statuses);
 
     Optional<QueueToken> findTopByDoctorDoctorIdAndBookingDateOrderByQueueTokenIdDesc(
             Long doctorId,
