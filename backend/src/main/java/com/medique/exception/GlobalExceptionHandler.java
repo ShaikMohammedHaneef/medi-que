@@ -138,4 +138,16 @@ public class GlobalExceptionHandler {
                         request.getRequestURI())
                 );
     }
+
+    @ExceptionHandler(ActiveBookingExistsException.class)
+    public ResponseEntity<ErrorResponse> handleActiveBookingExists(ActiveBookingExistsException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+    }
 }
