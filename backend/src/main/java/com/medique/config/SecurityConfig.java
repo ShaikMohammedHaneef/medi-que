@@ -71,7 +71,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/receptionists/**").hasRole("RECEPTIONIST")
 
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
         return http.build();
     }
