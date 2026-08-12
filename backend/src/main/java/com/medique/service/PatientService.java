@@ -3,6 +3,7 @@ package com.medique.service;
 import com.medique.dto.request.PatientRequest;
 import com.medique.dto.request.TokenBookingRequest;
 import com.medique.dto.response.PatientResponse;
+import com.medique.dto.response.QueueTrackingResponse;
 import com.medique.dto.response.TokenBookingResponse;
 import com.medique.entity.Doctor;
 import com.medique.entity.Patient;
@@ -13,6 +14,7 @@ import com.medique.exception.PatientNotFoundException;
 import com.medique.mapper.PatientMapper;
 import com.medique.repository.DoctorRepository;
 import com.medique.repository.PatientRepository;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 
@@ -92,4 +94,5 @@ public class PatientService {
                 .bookingDate(savedQueueToken.getBookingDate())
                 .build();
     }
+
 }

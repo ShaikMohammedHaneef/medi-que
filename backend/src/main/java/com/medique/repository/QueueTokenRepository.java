@@ -18,4 +18,6 @@ public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
             Long doctorId,
             LocalDate bookingDate
     );
+
+    Optional<QueueToken> findByTokenNumber(String tokenNumber);
 }

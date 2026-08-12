@@ -1,10 +1,12 @@
 package com.medique.service;
 
+import com.medique.dto.response.QueueTrackingResponse;
 import com.medique.entity.Doctor;
 import com.medique.entity.Patient;
 import com.medique.entity.QueueToken;
 import com.medique.enums.QueueStatus;
 import com.medique.exception.ActiveBookingExistsException;
+import com.medique.exception.QueueTokenNotFoundException;
 import com.medique.repository.QueueTokenRepository;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +60,27 @@ public class QueueTokenService {
                 .build();
 
         return queueTokenRepository.save(queueToken);
+    }
+
+    public QueueTrackingResponse trackQueue(String tokenNumber) {
+
+        QueueToken queueToken = queueTokenRepository.findByTokenNumber(tokenNumber)
+                .orElseThrow(()-> new QueueTokenNotFoundException("there is no active queue token with token number : "+tokenNumber)
+        );
+
+        int avgConsultationTime = 7;
+        int queuePosition = Integer.parseInt(tokenNumber.substring(tokenNumber.indexOf("-")+1))-1;
+
+        if(queuePosition ==0)
+            queueToken.setStatus(QueueStatus.IN_PROGRESS);
+
+        int waitTime = avgConsultationTime * (queuePosition);
+
+        return QueueTrackingResponse.builder()
+                .queuePosition(queuePosition)
+                .tokenNumber(tokenNumber)
+                .waitTime(waitTime)
+                .status(queueToken.getStatus())
+                .build();
     }
 }

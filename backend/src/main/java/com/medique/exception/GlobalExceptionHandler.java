@@ -152,6 +152,19 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(QueueTokenNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleQueueTokenNotFound(QueueTokenNotFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFound(
             NoResourceFoundException e,
