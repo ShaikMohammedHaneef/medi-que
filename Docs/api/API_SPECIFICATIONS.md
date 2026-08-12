@@ -110,11 +110,11 @@ Retrieves all active hospital departments available for OP appointment booking.
 
 ### Endpoint
 
-| Property | Value |
-|----------|-------|
-| Method | GET |
-| Endpoint | `/patients/departments` |
-| Authentication | Not Required |
+| Property | Value                  |
+|----------|------------------------|
+| Method | GET                    |
+| Endpoint | `/departments`         |
+| Authentication | Not Required           |
 
 ### Request
 
@@ -150,11 +150,11 @@ Retrieves all active and currently available doctors belonging to the selected d
 
 ### Endpoint
 
-| Property | Value |
-|----------|-------|
-| Method | GET |
-| Endpoint | `/patients/departments/{departmentId}/doctors` |
-| Authentication | Not Required |
+| Property | Value                                 |
+|----------|---------------------------------------|
+| Method | GET                                   |
+| Endpoint | `/departments/{departmentId}/doctors` |
+| Authentication | Not Required                          |
 
 ### Request
 

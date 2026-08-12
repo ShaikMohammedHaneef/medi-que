@@ -64,13 +64,13 @@ The MediQue REST APIs are organized into the following modules.
 
 ### 4.2 Patient
 
-| Method | Endpoint | Description | Authentication |
-|--------|----------|-------------|----------------|
-| POST | `/patients/book` | Book a new OP appointment and generate a queue token. | No |
-| GET | `/patients/track/{tokenNumber}` | Retrieve the current queue status, queue position, and estimated waiting time. | No |
-| PATCH | `/patients/cancel/{tokenNumber}` | Cancel an OP appointment while its status is `WAITING`. | No |
-| GET    | `/patients/departments` | Retrieve all active departments. | No |
-| GET    | `/patients/departments/{departmentId}/doctors` | Retrieve all active & available doctors in the selected department. | No|
+| Method | Endpoint                                      | Description | Authentication |
+|--------|-----------------------------------------------|-------------|----------------|
+| POST | `/patients/book`                              | Book a new OP appointment and generate a queue token. | No |
+| GET | `/patients/track/{tokenNumber}`               | Retrieve the current queue status, queue position, and estimated waiting time. | No |
+| PATCH | `/patients/cancel/{tokenNumber}`              | Cancel an OP appointment while its status is `WAITING`. | No |
+| GET    | `/departments`                                | Retrieve all active departments. | No |
+| GET    | `/departments/{departmentId}/doctors`         | Retrieve all active & available doctors in the selected department. | No|
 
 
 ---
