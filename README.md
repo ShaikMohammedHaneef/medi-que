@@ -168,17 +168,17 @@ Before running the application, configure these values using one of the followin
 
 Configure the following environment variables:
 
-| Variable          | Description                          | Example                                       |
-| ----------------- | ------------------------------------ |-----------------------------------------------|
-| `DB_URL`          | PostgreSQL JDBC connection URL       | `jdbc:postgresql://localhost:5432/medique_db` |
-| `DB_USERNAME`     | PostgreSQL username                  | `postgres`                                    |
-| `DB_PASSWORD`     | PostgreSQL password                  | `your_database_password`                      |
-| `ADMIN_FULL_NAME` | Initial administrator's full name    | `System Administrator`                        |
-| `ADMIN_EMAIL`     | Initial administrator's email        | `admin@example.com`                           |
-| `ADMIN_PASSWORD`  | Initial administrator's password     | `your_admin_password`                         |
-| `ADMIN_PHONE`     | Initial administrator's phone number | `9999999999`                                  |
-| `JWT_SECRET`      | Secret key used to sign JWTs         | `your_secure_jwt_secret`                      |
-| `JWT_EXPIRATION`  | JWT access token expiration duration | `3600000`                                     |
+| Variable          | Description                                                         | Example                                       |
+| ----------------- |---------------------------------------------------------------------|-----------------------------------------------|
+| `DB_URL`          | PostgreSQL JDBC connection URL                                      | `jdbc:postgresql://localhost:5432/medique_db` |
+| `DB_USERNAME`     | PostgreSQL username                                                 | `postgres`                                    |
+| `DB_PASSWORD`     | PostgreSQL password                                                 | `your_database_password`                      |
+| `ADMIN_FULL_NAME` | Initial administrator's full name                                   | `System Administrator`                        |
+| `ADMIN_EMAIL`     | Initial administrator's email                                       | `admin@example.com`                           |
+| `ADMIN_PASSWORD`  | Initial administrator's password                                    | `your_admin_password`                         |
+| `ADMIN_PHONE`     | Initial administrator's phone number                                | `9999999999`                                  |
+| `JWT_SECRET`      | Secret key used to sign JWTs. Must be at least 32 bytes (256 bits). | `your_secure_jwt_secret`                      |
+| `JWT_EXPIRATION`  | JWT access token expiration duration                                | `3600000`                                     |
 
 Set these variables according to your local environment.
 
@@ -202,9 +202,10 @@ admin.email=admin@example.com
 admin.password=your_admin_password
 admin.phone-number=9999999999
 
-jwt.secret=your_secure_jwt_secret
+jwt.secret=your_secure_jwt_secret 
 jwt.expiration=3600000
 ```
+> **Note:** `JWT_SECRET` must be at least **32 bytes (256 bits)** when using the HMAC signing key. Use a strong, randomly generated secret.
 
 This allows you to run the application without configuring environment variables separately.
 
