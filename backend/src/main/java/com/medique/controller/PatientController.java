@@ -6,7 +6,6 @@ import com.medique.dto.request.TokenBookingRequest;
 import com.medique.dto.response.PatientResponse;
 import com.medique.dto.response.QueueTrackingResponse;
 import com.medique.dto.response.TokenBookingResponse;
-import com.medique.entity.QueueToken;
 import com.medique.service.PatientService;
 import com.medique.service.QueueTokenService;
 import org.springframework.http.HttpStatus;

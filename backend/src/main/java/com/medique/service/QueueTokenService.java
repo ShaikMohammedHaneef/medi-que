@@ -18,11 +18,11 @@ public class QueueTokenService {
 
     private final QueueTokenRepository queueTokenRepository;
 
-    public QueueTokenService(QueueTokenRepository queueTokenRepository){
+    public QueueTokenService(QueueTokenRepository queueTokenRepository) {
         this.queueTokenRepository = queueTokenRepository;
     }
 
-    public QueueToken createQueueToken(Patient patient, Doctor doctor){
+    public QueueToken createQueueToken(Patient patient, Doctor doctor) {
 
         boolean hasActiveToken = queueTokenRepository.existsByPatientPatientIdAndStatusIn(
                 patient.getPatientId(),
@@ -64,23 +64,40 @@ public class QueueTokenService {
 
     public QueueTrackingResponse trackQueue(String tokenNumber) {
 
-        QueueToken queueToken = queueTokenRepository.findByTokenNumber(tokenNumber)
-                .orElseThrow(()-> new QueueTokenNotFoundException("there is no active queue token with token number : "+tokenNumber)
-        );
+        QueueToken queueToken = queueTokenRepository.findByTokenNumberAndBookingDate(tokenNumber, LocalDate.now())
+                .orElseThrow(() -> new QueueTokenNotFoundException("there is no active queue token with token number : " + tokenNumber)
+                );
 
-        int avgConsultationTime = 7;
-        int queuePosition = Integer.parseInt(tokenNumber.substring(tokenNumber.indexOf("-")+1))-1;
+        int avgConsultationTime = 6;
 
-        if(queuePosition ==0)
-            queueToken.setStatus(QueueStatus.IN_PROGRESS);
+        int patientsAhead = 0;
+        int queuePosition = 0;
+        int waitTime = 0;
 
-        int waitTime = avgConsultationTime * (queuePosition);
+        if (queueToken.getStatus() == QueueStatus.IN_PROGRESS || queueToken.getStatus() == QueueStatus.WAITING) {
+
+            patientsAhead = queueTokenRepository.countOfActiveQueueTokens(
+                    queueToken.getDoctor().getDoctorId(),
+                    LocalDate.now(),
+                    List.of(QueueStatus.IN_PROGRESS, QueueStatus.WAITING),
+                    queueToken.getQueueTokenId()
+            );
+
+            queuePosition = patientsAhead + 1;
+            waitTime = avgConsultationTime * (patientsAhead);
+        }
+
 
         return QueueTrackingResponse.builder()
-                .queuePosition(queuePosition)
                 .tokenNumber(tokenNumber)
-                .waitTime(waitTime)
+                .patientName(queueToken.getPatient().getFullName())
+                .doctorName(queueToken.getDoctor().getFullName())
+                .departmentName(queueToken.getDoctor().getDepartment().getName())
+                .departmentDescription(queueToken.getDoctor().getDepartment().getDescription())
                 .status(queueToken.getStatus())
+                .queuePosition(queuePosition)
+                .patientsAhead(patientsAhead)
+                .waitTime(waitTime)
                 .build();
     }
 }

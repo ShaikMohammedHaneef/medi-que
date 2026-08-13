@@ -10,7 +10,12 @@ import lombok.*;
 @Builder
 public class QueueTrackingResponse {
     private String tokenNumber;
+    private String patientName;
+    private String doctorName;
+    private String departmentName;
+    private String departmentDescription;
     private QueueStatus status;
     private int queuePosition;
+    private int patientsAhead;
     private int waitTime;
 }
