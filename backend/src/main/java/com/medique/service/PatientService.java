@@ -68,8 +68,11 @@ public class PatientService {
     }
 
     public TokenBookingResponse bookOP(TokenBookingRequest request) {
-        Doctor doctor = doctorRepository.findById(request.getDoctorId())
-                .orElseThrow(() -> new DoctorNotFoundException("Doctor not found with id : " + request.getDoctorId()));
+        Doctor doctor = doctorRepository.findActiveAndAvailableDoctorById(request.getDoctorId())
+                .orElseThrow(
+                        () -> new DoctorNotFoundException("Doctor not found or is currently unavailable")
+                );
+
 
         Patient patient = patientRepository.findUniquePatient(request.getFullName(),
                 request.getDateOfBirth(),

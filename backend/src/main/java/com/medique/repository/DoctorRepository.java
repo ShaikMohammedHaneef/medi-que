@@ -19,6 +19,14 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             """)
     List<Doctor> findActiveAndAvailableDoctorsByDepartment(@Param("departmentId") Long departmentId);
 
+    @Query("""
+            SELECT d FROM Doctor d
+              WHERE d.doctorId = :doctorId
+                AND d.isActive = true
+                AND d.isAvailable = true
+            """)
+    Optional<Doctor> findActiveAndAvailableDoctorById(@Param("doctorId") Long doctorId);
+
     boolean existsByDoctorCode(String doctorCode);
 
     boolean existsByEmail(String email);
