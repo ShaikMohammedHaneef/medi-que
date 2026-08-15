@@ -45,4 +45,9 @@ public class PatientController {
     public ResponseEntity<QueueTrackingResponse> trackQueue(@PathVariable String tokenNumber){
         return ResponseEntity.ok(queueTokenService.trackQueue(tokenNumber));
     }
+
+    @PatchMapping("/patients/cancel/{tokenNumber}")
+    public ResponseEntity<QueueTrackingResponse> cancelOp(@PathVariable String tokenNumber){
+        return ResponseEntity.ok(queueTokenService.cancelQueueToken(tokenNumber));
+    }
 }

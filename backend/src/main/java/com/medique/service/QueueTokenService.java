@@ -6,7 +6,9 @@ import com.medique.entity.Patient;
 import com.medique.entity.QueueToken;
 import com.medique.enums.QueueStatus;
 import com.medique.exception.ActiveBookingExistsException;
+import com.medique.exception.QueueTokenCannotBeCancelledException;
 import com.medique.exception.QueueTokenNotFoundException;
+import com.medique.mapper.QueueTokenMapper;
 import com.medique.repository.QueueTokenRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,11 @@ public class QueueTokenService {
 
     public QueueTokenService(QueueTokenRepository queueTokenRepository) {
         this.queueTokenRepository = queueTokenRepository;
+    }
+
+    private QueueToken findQueueTokenOrThrow(String  tokenNumber){
+        return queueTokenRepository.findByTokenNumberAndBookingDate(tokenNumber, LocalDate.now())
+                .orElseThrow(()-> new QueueTokenNotFoundException("there is no active queue token with token number : "+ tokenNumber));
     }
 
     public QueueToken createQueueToken(Patient patient, Doctor doctor) {
@@ -64,9 +71,7 @@ public class QueueTokenService {
 
     public QueueTrackingResponse trackQueue(String tokenNumber) {
 
-        QueueToken queueToken = queueTokenRepository.findByTokenNumberAndBookingDate(tokenNumber, LocalDate.now())
-                .orElseThrow(() -> new QueueTokenNotFoundException("there is no active queue token with token number : " + tokenNumber)
-                );
+        QueueToken queueToken = findQueueTokenOrThrow(tokenNumber);
 
         int avgConsultationTime = 6;
 
@@ -87,17 +92,23 @@ public class QueueTokenService {
             waitTime = avgConsultationTime * (patientsAhead);
         }
 
+        return QueueTokenMapper.toTrackingResponse(queueToken,
+                queuePosition,
+                patientsAhead,
+                waitTime);
 
-        return QueueTrackingResponse.builder()
-                .tokenNumber(tokenNumber)
-                .patientName(queueToken.getPatient().getFullName())
-                .doctorName(queueToken.getDoctor().getFullName())
-                .departmentName(queueToken.getDoctor().getDepartment().getName())
-                .departmentDescription(queueToken.getDoctor().getDepartment().getDescription())
-                .status(queueToken.getStatus())
-                .queuePosition(queuePosition)
-                .patientsAhead(patientsAhead)
-                .waitTime(waitTime)
-                .build();
+    }
+
+    public QueueTrackingResponse cancelQueueToken(String tokenNumber) {
+
+        QueueToken queueToken = findQueueTokenOrThrow(tokenNumber);
+
+        if(queueToken.getStatus() != QueueStatus.WAITING )
+            throw new QueueTokenCannotBeCancelledException("Queue token cannot be cancelled with status code " +queueToken.getStatus());
+
+        queueToken.setStatus(QueueStatus.CANCELLED);
+        queueTokenRepository.save(queueToken);
+
+        return QueueTokenMapper.toTrackingResponse(queueToken, 0, 0, 0);
     }
 }

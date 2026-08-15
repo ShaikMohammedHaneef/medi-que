@@ -194,4 +194,17 @@ public class GlobalExceptionHandler {
                         request.getRequestURI()
                 ));
     }
+
+    @ExceptionHandler(QueueTokenCannotBeCancelledException.class)
+    public ResponseEntity<ErrorResponse> handleQueueTokenCannotBeCancelled(QueueTokenCannotBeCancelledException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        e.getMessage(),
+                        request.getRequestURI())
+                );
+
+    }
 }
