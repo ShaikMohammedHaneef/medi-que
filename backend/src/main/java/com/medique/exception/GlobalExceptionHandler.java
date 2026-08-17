@@ -195,8 +195,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(QueueTokenCannotBeCancelledException.class)
-    public ResponseEntity<ErrorResponse> handleQueueTokenCannotBeCancelled(QueueTokenCannotBeCancelledException e, HttpServletRequest request) {
+    @ExceptionHandler(QueueOperationException.class)
+    public ResponseEntity<ErrorResponse> handleQueueTokenCannotBeCancelled(QueueOperationException e, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         LocalDateTime.now(),

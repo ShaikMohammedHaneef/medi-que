@@ -1,5 +1,6 @@
 package com.medique.mapper;
 
+import com.medique.dto.response.DoctorQueueResponse;
 import com.medique.dto.response.QueueTrackingResponse;
 import com.medique.entity.QueueToken;
 
@@ -23,6 +24,17 @@ public class QueueTokenMapper {
                 .queuePosition(queuePosition)
                 .patientsAhead(patientsAhead)
                 .waitTime(waitTime)
+                .build();
+    }
+
+    public static DoctorQueueResponse toDoctorQueueResponse(QueueToken queueToken, int queuePosition){
+        return DoctorQueueResponse.builder()
+                .tokenNumber(queueToken.getTokenNumber())
+                .patientId(queueToken.getPatient().getPatientId())
+                .patientName(queueToken.getPatient().getFullName())
+                .status(queueToken.getStatus())
+                .bookedAt(queueToken.getBookedAt())
+                .queuePosition(queuePosition)
                 .build();
     }
 }

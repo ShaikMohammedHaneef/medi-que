@@ -29,8 +29,37 @@ public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
             AND q.bookingDate = :bookingDate
             AND q.status IN :statuses
             AND q.queueTokenId < :queueTokenId""")
-    int countOfActiveQueueTokens( @Param("doctorId") Long doctor_id,
+    int countOfActiveQueueTokens(@Param("doctorId") Long doctor_id,
                                  @Param("bookingDate") LocalDate bookingDate,
                                  @Param("statuses") List<QueueStatus> statuses,
-                                  @Param("queueTokenId") Long queuTOkenId);
+                                 @Param("queueTokenId") Long queuTokenId);
+
+    @Query("""
+            SELECT q
+            FROM QueueToken q 
+            WHERE q.doctor.doctorId = :doctorId
+            AND q.bookingDate = :bookingDate
+            ORDER BY q.queueTokenId ASC
+            """)
+    List<QueueToken> getDoctorQueue(@Param("doctorId") Long doctor_id, @Param("bookingDate") LocalDate bookingDate);
+
+    @Query(""" 
+            SELECT q 
+            FROM QueueToken q
+            WHERE q.doctor.doctorId = :doctorId
+            AND q.bookingDate = :bookingDate
+            AND q.status = :status
+            ORDER BY q.queueTokenId ASC
+            """)
+    Optional<QueueToken> findNextToken(
+            @Param("doctorId") Long doctorId,
+            @Param("bookingDate") LocalDate bookingDate,
+            @Param("status") QueueStatus status
+    );
+
+    Optional<QueueToken> findFirstByDoctorDoctorIdAndBookingDateAndStatus(
+            Long doctorId,
+            LocalDate bookingDate,
+            QueueStatus status
+    );
 }

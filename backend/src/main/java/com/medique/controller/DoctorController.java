@@ -5,6 +5,7 @@ import com.medique.dto.request.DepartmentRequest;
 import com.medique.dto.request.DoctorRequest;
 import com.medique.dto.response.DepartmentAdminResponse;
 import com.medique.dto.response.DoctorAdminResponse;
+import com.medique.dto.response.DoctorQueueResponse;
 import com.medique.dto.response.DoctorResponse;
 import com.medique.entity.Doctor;
 import com.medique.service.DoctorService;
@@ -61,5 +62,15 @@ public class DoctorController {
     public ResponseEntity<DoctorAdminResponse> activateDoctor(@PathVariable Long doctorId) {
         DoctorAdminResponse response = doctorService.activateDoctor(doctorId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/doctors/queue")
+    public ResponseEntity<List<DoctorQueueResponse>> getDailyQueue() {
+        return ResponseEntity.ok(doctorService.getDailyQueue());
+    }
+
+    @PatchMapping("/doctors/next")
+    public ResponseEntity<DoctorQueueResponse> callNextPatient() {
+        return ResponseEntity.ok(doctorService.callNextPatient());
     }
 }
