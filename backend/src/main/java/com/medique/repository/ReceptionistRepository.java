@@ -11,4 +11,6 @@ public interface ReceptionistRepository extends JpaRepository<Receptionist, Long
     boolean existsByPhoneNumber(String phoneNumber);
 
     Optional<Receptionist> findByEmail(String email);
+
+    long countByIsActiveTrue();
 }

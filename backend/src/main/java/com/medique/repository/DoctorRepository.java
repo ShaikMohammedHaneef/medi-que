@@ -34,4 +34,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     Optional<Doctor> findByEmail(String email);
+
+    long countByIsActiveTrue();
+
 }

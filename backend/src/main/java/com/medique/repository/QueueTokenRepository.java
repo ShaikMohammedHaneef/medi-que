@@ -75,4 +75,16 @@ public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
             @Param("doctorCode") String doctorCode,
             @Param("bookingDate") LocalDate bookingDate
     );
+
+    long countByBookingDate(LocalDate bookingDate);
+
+    @Query("""
+        SELECT q.status, COUNT(q)
+        FROM QueueToken q
+        WHERE q.bookingDate = :bookingDate
+        GROUP BY q.status
+        """)
+    List<Object[]> countTodayAppointmentsByStatus(
+            @Param("bookingDate") LocalDate bookingDate
+    );
 }
