@@ -50,6 +50,7 @@ public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
             AND q.bookingDate = :bookingDate
             AND q.status = :status
             ORDER BY q.queueTokenId ASC
+
             """)
     Optional<QueueToken> findNextToken(
             @Param("doctorId") Long doctorId,

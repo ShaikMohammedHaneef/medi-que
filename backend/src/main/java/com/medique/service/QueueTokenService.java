@@ -6,7 +6,7 @@ import com.medique.entity.Patient;
 import com.medique.entity.QueueToken;
 import com.medique.enums.QueueStatus;
 import com.medique.exception.ActiveBookingExistsException;
-import com.medique.exception.QueueTokenCannotBeCancelledException;
+import com.medique.exception.QueueOperationException;
 import com.medique.exception.QueueTokenNotFoundException;
 import com.medique.mapper.QueueTokenMapper;
 import com.medique.repository.QueueTokenRepository;
@@ -104,7 +104,7 @@ public class QueueTokenService {
         QueueToken queueToken = findQueueTokenOrThrow(tokenNumber);
 
         if(queueToken.getStatus() != QueueStatus.WAITING )
-            throw new QueueTokenCannotBeCancelledException("Queue token cannot be cancelled with status code " +queueToken.getStatus());
+            throw new QueueOperationException("Queue token cannot be cancelled with status code " +queueToken.getStatus());
 
         queueToken.setStatus(QueueStatus.CANCELLED);
         queueTokenRepository.save(queueToken);

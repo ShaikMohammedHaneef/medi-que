@@ -1,5 +1,6 @@
 package com.medique.controller;
 
+import com.medique.dto.request.AvailabilityRequest;
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DepartmentRequest;
 import com.medique.dto.request.DoctorRequest;
@@ -72,5 +73,15 @@ public class DoctorController {
     @PatchMapping("/doctors/next")
     public ResponseEntity<DoctorQueueResponse> callNextPatient() {
         return ResponseEntity.ok(doctorService.callNextPatient());
+    }
+
+    @PatchMapping("/doctors/complete")
+    public ResponseEntity<DoctorQueueResponse> completeConsultation() {
+        return ResponseEntity.ok(doctorService.completeConsultation());
+    }
+
+    @PatchMapping("/doctors/availability")
+    public ResponseEntity<DoctorAdminResponse> updateAvailability(@RequestBody AvailabilityRequest request){
+        return ResponseEntity.ok(doctorService.updateAvailability(request.isAvailable()));
     }
 }

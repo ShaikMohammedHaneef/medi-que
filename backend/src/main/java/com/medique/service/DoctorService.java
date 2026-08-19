@@ -1,5 +1,6 @@
 package com.medique.service;
 
+import com.medique.dto.request.AvailabilityRequest;
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DoctorRequest;
 import com.medique.dto.response.DoctorAdminResponse;
@@ -170,20 +171,53 @@ public class DoctorService {
         Doctor doctor = getAuthenticatedDoctor();
 
         QueueToken currentToken = queueTokenRepository.findFirstByDoctorDoctorIdAndBookingDateAndStatus(
-                        doctor.getDoctorId(),
-                        LocalDate.now(),
-                        QueueStatus.IN_PROGRESS).orElse(null);
+                doctor.getDoctorId(),
+                LocalDate.now(),
+                QueueStatus.IN_PROGRESS).orElse(null);
 
         if (currentToken != null)
             throw new QueueOperationException("Complete the current consultation before calling the next patient");
 
 
         QueueToken nextQueueToken = queueTokenRepository.findNextToken(doctor.getDoctorId(), LocalDate.now(), QueueStatus.WAITING)
-                .orElseThrow(() -> new QueueTokenNotFoundException("Next queue token not found with waiting status"));
+                .orElseThrow(() -> new QueueTokenNotFoundException("No queue token not found with waiting status"));
 
         nextQueueToken.setStatus(QueueStatus.IN_PROGRESS);
         queueTokenRepository.save(nextQueueToken);
         return QueueTokenMapper.toDoctorQueueResponse(nextQueueToken, 1);
+
+    }
+
+    public DoctorQueueResponse completeConsultation() {
+        Doctor doctor = getAuthenticatedDoctor();
+
+        QueueToken queueToken = queueTokenRepository.findFirstByDoctorDoctorIdAndBookingDateAndStatus(
+                doctor.getDoctorId(),
+                LocalDate.now(),
+                QueueStatus.IN_PROGRESS).orElseThrow(
+                () -> new QueueOperationException("There is no current consultation to mark completed"));
+
+        queueToken.setStatus(QueueStatus.COMPLETED);
+        queueTokenRepository.save(queueToken);
+        return QueueTokenMapper.toDoctorQueueResponse(queueToken, 0);
+    }
+
+    public DoctorAdminResponse updateAvailability(boolean available) {
+
+        Doctor doctor = getAuthenticatedDoctor();
+
+        if (!doctor.isActive()) {
+            throw new DoctorNotFoundException(
+                    "Doctor is not active"
+            );
+        }
+
+        doctor.setAvailable(available);
+
+        return DoctorMapper.toAdminResponse(
+                doctorRepository.save(doctor)
+        );
+
 
     }
 }
