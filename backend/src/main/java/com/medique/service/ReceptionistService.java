@@ -2,15 +2,22 @@ package com.medique.service;
 
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.request.ReceptionistRequest;
+import com.medique.dto.response.DoctorQueueResponse;
 import com.medique.dto.response.ReceptionistResponse;
+import com.medique.entity.QueueToken;
 import com.medique.entity.Receptionist;
+import com.medique.enums.QueueStatus;
 import com.medique.exception.ReceptionistAlreadyExistsException;
 import com.medique.exception.ReceptionistNotFoundException;
+import com.medique.mapper.QueueTokenMapper;
 import com.medique.mapper.ReceptionistMapper;
+import com.medique.repository.QueueTokenRepository;
 import com.medique.repository.ReceptionistRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,10 +25,14 @@ public class ReceptionistService {
 
     private final ReceptionistRepository receptionistRepository;
     private final PasswordEncoder passwordEncoder;
+    private final QueueTokenRepository queueTokenRepository;
 
-    public ReceptionistService(ReceptionistRepository receptionistRepository, PasswordEncoder passwordEncoder) {
+    public ReceptionistService(ReceptionistRepository receptionistRepository,
+                               PasswordEncoder passwordEncoder,
+                               QueueTokenRepository queueTokenRepository) {
         this.receptionistRepository = receptionistRepository;
         this.passwordEncoder = passwordEncoder;
+        this.queueTokenRepository = queueTokenRepository;
     }
 
 
@@ -85,5 +96,31 @@ public class ReceptionistService {
 
         receptionist.setActive(false);
         return ReceptionistMapper.toResponse(receptionistRepository.save(receptionist));
+    }
+
+    public List<DoctorQueueResponse> getDoctorQueue(String doctorCode) {
+
+        List<QueueToken> queueTokens =
+                queueTokenRepository.getReceptionistQueue(
+                        doctorCode,
+                        LocalDate.now()
+                );
+
+        int queuePosition = 0;
+
+        List<DoctorQueueResponse> response = new ArrayList<>();
+
+        for (QueueToken queueToken : queueTokens) {
+            if (queueToken.getStatus() == QueueStatus.WAITING || queueToken.getStatus() == QueueStatus.IN_PROGRESS) {
+
+                queuePosition++;
+
+                response.add(QueueTokenMapper.toDoctorQueueResponse(queueToken, queuePosition));
+
+            } else
+                response.add(QueueTokenMapper.toDoctorQueueResponse(queueToken, 0));
+        }
+
+        return response;
     }
 }
