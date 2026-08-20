@@ -13,7 +13,18 @@ import java.util.Optional;
 
 public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
 
-    boolean existsByPatientPatientIdAndStatusIn(Long patientId, Collection<QueueStatus> statuses);
+    @Query("""
+        SELECT COUNT(q) > 0
+        FROM QueueToken q
+        WHERE q.patient.patientId = :patientId
+          AND q.bookingDate = :bookingDate
+          AND q.status IN :statuses
+        """)
+    boolean existsActiveTokenForToday(
+            @Param("patientId") Long patientId,
+            @Param("bookingDate") LocalDate bookingDate,
+            @Param("statuses") List<QueueStatus> statuses
+    );
 
     Optional<QueueToken> findTopByDoctorDoctorIdAndBookingDateOrderByQueueTokenIdDesc(
             Long doctorId,

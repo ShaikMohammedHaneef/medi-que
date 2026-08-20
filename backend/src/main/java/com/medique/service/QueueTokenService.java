@@ -19,9 +19,11 @@ import java.util.List;
 public class QueueTokenService {
 
     private final QueueTokenRepository queueTokenRepository;
+    private final QueueWebSocketService queueWebSocketService;
 
-    public QueueTokenService(QueueTokenRepository queueTokenRepository) {
+    public QueueTokenService(QueueTokenRepository queueTokenRepository, QueueWebSocketService queueWebSocketService) {
         this.queueTokenRepository = queueTokenRepository;
+        this.queueWebSocketService = queueWebSocketService;
     }
 
     private QueueToken findQueueTokenOrThrow(String  tokenNumber){
@@ -31,10 +33,10 @@ public class QueueTokenService {
 
     public QueueToken createQueueToken(Patient patient, Doctor doctor) {
 
-        boolean hasActiveToken = queueTokenRepository.existsByPatientPatientIdAndStatusIn(
+        boolean hasActiveToken = queueTokenRepository.existsActiveTokenForToday(
                 patient.getPatientId(),
-                List.of(QueueStatus.WAITING,
-                        QueueStatus.IN_PROGRESS));
+                LocalDate.now(),
+                List.of(QueueStatus.WAITING, QueueStatus.IN_PROGRESS));
 
         if (hasActiveToken) {
             throw new ActiveBookingExistsException("Patient already has an active booking");
@@ -66,7 +68,13 @@ public class QueueTokenService {
                 .bookingDate(LocalDate.now())
                 .build();
 
-        return queueTokenRepository.save(queueToken);
+        QueueToken savedQueueToken = queueTokenRepository.save(queueToken);
+
+        QueueTrackingResponse queueTrackingResponse = trackQueue(savedQueueToken.getTokenNumber());
+
+        queueWebSocketService.publishQueueUpdate(savedQueueToken.getDoctor().getDoctorCode(), queueTrackingResponse);
+
+        return savedQueueToken;
     }
 
     public QueueTrackingResponse trackQueue(String tokenNumber) {
