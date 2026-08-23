@@ -1,11 +1,11 @@
 package com.medique.service;
 
-import com.medique.dto.request.AvailabilityRequest;
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DoctorRequest;
 import com.medique.dto.response.DoctorAdminResponse;
 import com.medique.dto.response.DoctorQueueResponse;
 import com.medique.dto.response.DoctorResponse;
+import com.medique.dto.response.QueueTrackingResponse;
 import com.medique.entity.Department;
 import com.medique.entity.Doctor;
 import com.medique.entity.QueueToken;
@@ -32,17 +32,24 @@ public class DoctorService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final QueueTokenRepository queueTokenRepository;
+    private final QueueWebSocketService queueWebSocketService;
+    private final QueueTokenService queueTokenService;
 
     public DoctorService(
             DoctorRepository doctorRepository,
             DepartmentRepository departmentRepository,
             PasswordEncoder passwordEncoder,
-            QueueTokenRepository queueTokenRepository) {
+            QueueTokenRepository queueTokenRepository,
+            QueueWebSocketService queueWebSocketService,
+            QueueTokenService queueTokenService) {
 
         this.doctorRepository = doctorRepository;
         this.departmentRepository = departmentRepository;
         this.passwordEncoder = passwordEncoder;
         this.queueTokenRepository = queueTokenRepository;
+        this.queueWebSocketService =queueWebSocketService;
+        this.queueTokenService = queueTokenService;
+
     }
 
     private Department findDepartmentOrThrow(Long departmentId) {
@@ -184,8 +191,10 @@ public class DoctorService {
 
         nextQueueToken.setStatus(QueueStatus.IN_PROGRESS);
         queueTokenRepository.save(nextQueueToken);
-        return QueueTokenMapper.toDoctorQueueResponse(nextQueueToken, 1);
 
+        queueTokenService.publishQueueUpdates(doctor.getDoctorId(), doctor.getDoctorCode());
+
+        return QueueTokenMapper.toDoctorQueueResponse(nextQueueToken, 1);
     }
 
     public DoctorQueueResponse completeConsultation() {
@@ -199,6 +208,9 @@ public class DoctorService {
 
         queueToken.setStatus(QueueStatus.COMPLETED);
         queueTokenRepository.save(queueToken);
+
+        queueTokenService.publishQueueUpdates(doctor.getDoctorId(), doctor.getDoctorCode());
+
         return QueueTokenMapper.toDoctorQueueResponse(queueToken, 0);
     }
 

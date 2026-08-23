@@ -26,9 +26,9 @@ public class QueueTokenService {
         this.queueWebSocketService = queueWebSocketService;
     }
 
-    private QueueToken findQueueTokenOrThrow(String  tokenNumber){
+    private QueueToken findQueueTokenOrThrow(String tokenNumber) {
         return queueTokenRepository.findByTokenNumberAndBookingDate(tokenNumber, LocalDate.now())
-                .orElseThrow(()-> new QueueTokenNotFoundException("there is no active queue token with token number : "+ tokenNumber));
+                .orElseThrow(() -> new QueueTokenNotFoundException("there is no active queue token with token number : " + tokenNumber));
     }
 
     public QueueToken createQueueToken(Patient patient, Doctor doctor) {
@@ -111,12 +111,40 @@ public class QueueTokenService {
 
         QueueToken queueToken = findQueueTokenOrThrow(tokenNumber);
 
-        if(queueToken.getStatus() != QueueStatus.WAITING )
-            throw new QueueOperationException("Queue token cannot be cancelled with status code " +queueToken.getStatus());
+        if (queueToken.getStatus() != QueueStatus.WAITING)
+            throw new QueueOperationException("Queue token cannot be cancelled with status code " + queueToken.getStatus());
 
         queueToken.setStatus(QueueStatus.CANCELLED);
         queueTokenRepository.save(queueToken);
 
+        publishQueueUpdates(queueToken.getDoctor().getDoctorId(), queueToken.getDoctor().getDoctorCode());
+
         return QueueTokenMapper.toTrackingResponse(queueToken, 0, 0, 0);
+    }
+
+    public void publishQueueUpdates(
+            Long doctorId,
+            String doctorCode) {
+
+        List<QueueToken> activeTokens = queueTokenRepository.findActiveQueue(
+                doctorId,
+                LocalDate.now(),
+                List.of(QueueStatus.IN_PROGRESS, QueueStatus.WAITING)
+        );
+
+        int avgConsultationTime = 6;
+
+        for (int i = 0; i < activeTokens.size(); i++) {
+
+            QueueToken token = activeTokens.get(i);
+
+            int queuePosition = i + 1;
+            int patientsAhead = i;
+            int waitTime = patientsAhead * avgConsultationTime;
+
+            QueueTrackingResponse response = QueueTokenMapper.toTrackingResponse(token, queuePosition, patientsAhead, waitTime);
+
+            queueWebSocketService.publishQueueUpdate(doctorCode, response);
+        }
     }
 }
