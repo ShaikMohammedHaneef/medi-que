@@ -28,8 +28,8 @@ MediQue uses **JWT (JSON Web Token)** based authentication for hospital staff.
 
 The system supports the following authentication workflow:
 
-- During system initialization, a default administrator account is created. The administrator logs in using the configured credentials and manages the system..
-- After successful registration, the administrator logs in using their email and password.
+- During system initialization, a default administrator account is created. 
+- The administrator logs in using the configured credentials and manages the system.
 - The administrator creates accounts for doctors and receptionists.
 - Doctors and receptionists authenticate using their assigned credentials.
 - Upon successful authentication, the backend returns a JWT access token.
