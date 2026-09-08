@@ -71,6 +71,8 @@ The MediQue REST APIs are organized into the following modules.
 | PATCH | `/patients/cancel/{tokenNumber}`              | Cancel an OP appointment while its status is `WAITING`. | No |
 | GET    | `/departments`                                | Retrieve all active departments. | No |
 | GET    | `/departments/{departmentId}/doctors`         | Retrieve all active & available doctors in the selected department. | No|
+| GET | `/patients/{patientId}` | Retrieve patient by id | No |
+| PUT | `/patients/{patientId}`| Update patient by idea | No |
 
 
 ---
@@ -91,7 +93,7 @@ The MediQue REST APIs are organized into the following modules.
 | Method | Endpoint | Description | Authentication |
 |--------|----------|-------------|----------------|
 | POST | `/receptionists/book` | Register a walk-in patient and generate a queue token. | Yes |
-| GET | `/receptionists/queue/{doctorId}` | Retrieve the daily queue for a selected doctor. | Yes |
+| GET | `/receptionists/queue/{doctorCode}` | Retrieve the daily queue for a selected doctor. | Yes |
 | PATCH | `/receptionists/cancel/{tokenNumber}` | Cancel a patient's OP appointment. | Yes |
 
 ---
@@ -110,9 +112,11 @@ The MediQue REST APIs are organized into the following modules.
 | Method | Endpoint | Description | Authentication |
 |--------|----------|-------------|----------------|
 | GET | `/admin/departments` | Retrieve all departments(active & inactive). | Yes |
+| GET | `/departments/{departmentId}`| Retrieve department by id (active & inactive).| No |
 | POST | `/admin/departments` | Create a new department. | Yes |
 | PUT | `/admin/departments/{id}` | Update department information. | Yes |
 | PATCH | `/admin/departments/{id}/deactivate` | Deactivate a department. | Yes |
+| PATCH | `/admin/departments/{departmentId}/activate` | Activate a department. | Yes |
 
 
 
@@ -121,9 +125,11 @@ The MediQue REST APIs are organized into the following modules.
 | Method | Endpoint | Description | Authentication |
 |--------|----------|-------------|----------------|
 | GET | `/admin/doctors` | Retrieve all doctors(active & inactive). | Yes |
+| GET | `/admin/doctors/{doctorId}` | Retrieve doctor by id | Yes |
 | POST | `/admin/doctors` | Create a new doctor account. | Yes |
 | PUT | `/admin/doctors/{id}` | Update doctor information. | Yes |
 | PATCH | `/admin/doctors/{id}/deactivate` | Deactivate a doctor account. | Yes |
+| PATCH | `/admin/doctors/{doctorId}/activate` | Activate a doctor account | Yes |
 
 #### Receptionist
 
@@ -133,6 +139,8 @@ The MediQue REST APIs are organized into the following modules.
 | POST | `/admin/receptionists` | Create a new receptionist account. | Yes |
 | PUT | `/admin/receptionists/{id}` | Update receptionist information. | Yes |
 | PATCH | `/admin/receptionists/{id}/deactivate` | Deactivate a receptionist account. | Yes |
+| GET | `/admin/receptionists/{receptionistId} ` | Retrieve patient by id | Yes |
+| PATCH | `/admin/receptionists/{receptionistId}/activate` | Activate a receptionist account | Yes |
 
 ---
 
@@ -143,7 +151,6 @@ MediQue uses **WebSockets (STOMP)** to broadcast real-time queue updates to conn
 | Endpoint | Description |
 |----------|-------------|
 | `/topic/queue/{doctorCode}` | Broadcasts queue updates for a specific doctor's queue. |
-| `/app/queue/update` | Publishes queue update events from the backend. |
 
 
 Whenever a queue changes, connected clients automatically receive updated queue information without refreshing the page.
