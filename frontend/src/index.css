@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html {
   font-family: "Inter", sans-serif;
 }
@@ -10,4 +12,9 @@ body {
   color: #1D2530;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background-color: #111827;
+  color: #F3F4F6;
 }
