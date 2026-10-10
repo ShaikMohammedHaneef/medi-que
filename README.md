@@ -108,6 +108,8 @@ Make sure the following software is installed on your system:
 
 * Java JDK 21
 * PostgreSQL
+* Node.js
+* npm 
 * Git
 
 The project includes the **Maven Wrapper**, so no need to install Maven separately.
@@ -117,7 +119,7 @@ The project includes the **Maven Wrapper**, so no need to install Maven separate
 Clone the MediQue repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/ShaikMohammedHaneef/medi-que.git
 cd medi-que
 ```
 
@@ -262,6 +264,27 @@ The REST API base URL is:
 ```text
 http://localhost:8080/api
 ```
+
+## 4. Start the Frontend
+
+Open a **second terminal** from the project root directory and execute:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+- `npm ci` installs the frontend dependencies from `package-lock.json`.
+- `npm run dev` starts the Vite development server.
+
+The frontend will usually be available at:
+
+```text
+http://localhost:5173
+```
+
+Keep the frontend and backend running in separate terminals.
 
 # Application Configuration
 
