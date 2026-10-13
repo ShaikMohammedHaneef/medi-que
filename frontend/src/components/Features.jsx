@@ -18,13 +18,13 @@ const features = [
     icon: Clock3,
     title: "Live Wait Estimate",
     description:
-      "View your estimated waiting time and stay informed as the queue progresses",
+      "Check your queue position and estimated waiting time as the queue progresses.",
   },
   {
     icon: LayoutDashboard,
     title: "Queue Dashboard",
     description:
-      "View your estimated waiting time and stay informed as the queue progresses",
+      "View your current queue status, token details, and position in one place.",
   },
 ];
 
