@@ -2,7 +2,7 @@ import { Clock3 } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="flex flex-col items-center px-4 py-16 text-center md:py-30 gap-6">
+    <section className="flex flex-col items-center px-4 py-26 text-center md:py-32 gap-6">
       <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-300/80 dark:border-slate-300/20 px-5 py-1.5 text-xs md:text-sm text-slate-500 dark:text-slate-400 tracking-wide ">
         <Clock3 size={14} strokeWidth={1.8} />
         <span>Hospital OP Queue Management System</span>

@@ -23,7 +23,7 @@ export default function Navbar() {
       return savedTheme === "dark";
     }
 
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return false;
   });
 
   const toggleTheme = () => {
