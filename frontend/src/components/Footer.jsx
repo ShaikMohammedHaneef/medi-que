@@ -1,6 +1,6 @@
 
 import { Link } from "react-router";
-import { CodeXml, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import logo from "../assets/logo/medique-logo.png";
 
 export default function Footer() {
