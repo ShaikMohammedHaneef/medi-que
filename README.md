@@ -230,7 +230,7 @@ The project includes the Maven Wrapper.
 ### Windows
 
 ```bash
-mvnw.cmd clean install
+.\mvnw.cmd clean install
 ```
 
 ### Linux / macOS
@@ -244,7 +244,7 @@ mvnw.cmd clean install
 ### Windows
 
 ```bash
-mvnw.cmd spring-boot:run
+.\mvnw.cmd spring-boot:run
 ```
 
 ### Linux / macOS
