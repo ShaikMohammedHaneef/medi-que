@@ -3,19 +3,21 @@ import Footer from "./components/Footer.jsx";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import { Route, Routes } from "react-router";
+import TrackQueue from "./pages/TrackQueue.jsx";
 
 function App() {
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Navbar/>
-      <main>
+      <main className="flex-1">
         <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/about" element={<About/>}/>
+        <Route path="/track-queue" element={<TrackQueue/>}/>
         </Routes>
       </main>
       <Footer/>
-    </>
+    </div>
   );
 }
 

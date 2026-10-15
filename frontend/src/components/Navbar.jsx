@@ -37,7 +37,7 @@ export default function Navbar() {
   }, [isDark]);
 
   return (
-    <nav className="border-b border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937]">
+    <nav className="sticky top-0 z-50 border-b border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937]">
       <div className="mx-auto h-16 flex items-center max-w-[1440px] justify-between px-4 sm:px-6 lg:px-8 ">
         {/* left section */}
         <div className="flex items-center gap-8">

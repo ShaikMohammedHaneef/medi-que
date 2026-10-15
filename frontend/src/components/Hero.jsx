@@ -1,4 +1,5 @@
 import { Clock3 } from "lucide-react";
+import { Link } from "react-router";
 
 export default function Hero() {
   return (
@@ -18,9 +19,11 @@ export default function Hero() {
         <button className=" px-5 w-full py-3 sm:flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white transition-colors hover:bg-[#096B98] whitespace-nowrap">
           Register Patient
         </button>
-        <button className="border w-full sm:flex-1 whitespace-nowrap border-slate-300/80 dark:border-slate-300/20 px-5 py-3 rounded-lg text-sm font-medium hover:text-white hover:bg-[#0B81B7]">
+        <Link 
+        to="/track-queue" 
+        className="border w-full sm:flex-1 whitespace-nowrap border-slate-300/80 dark:border-slate-300/20 px-5 py-3 rounded-lg text-sm font-medium hover:text-white hover:bg-[#0B81B7]">
             Track Queue Status
-        </button>
+        </Link>
       </div>
     </section>
   );
