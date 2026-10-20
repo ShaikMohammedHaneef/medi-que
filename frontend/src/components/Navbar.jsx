@@ -16,6 +16,34 @@ import {
 export default function Navbar() {
   const [menu, setMenu] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+
+      // Keep the navbar visible near the top.
+      if (currentScrollY < 80) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY + 5) {
+        // Scrolling down.
+        setIsVisible(false);
+      } else if (currentScrollY < lastScrollY - 5) {
+        // Scrolling up.
+        setIsVisible(true);
+      }
+
+      lastScrollY = currentScrollY;
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const [isDark, setIsDark] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
 
@@ -37,14 +65,16 @@ export default function Navbar() {
   }, [isDark]);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937]">
+    <nav className={`sticky top-0 z-50 border-b border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937] transition-transform duration-300 ease-in-out ${isVisible ? "translate-y-0" : "-translate-y-full"}`}>
       <div className="mx-auto h-16 flex items-center max-w-[1440px] justify-between px-4 sm:px-6 lg:px-8 ">
         {/* left section */}
         <div className="flex items-center gap-8">
-          <NavLink 
-          to="/" end 
-          onClick={() => setMenu(false)} 
-          className="flex items-center">
+          <NavLink
+            to="/"
+            end
+            onClick={() => setMenu(false)}
+            className="flex items-center"
+          >
             <img src={logo} alt="MediQue - Home" className="h-12 w-auto" />
           </NavLink>
           <div className="hidden md:flex items-center gap-4 mt-1.5">
@@ -145,7 +175,10 @@ export default function Navbar() {
       </div>
 
       {menu && (
-        <div id="mobile-navigation" className="border-t border-[#DAE0E7] px-4 py-4 md:hidden dark:border-[#374151]">
+        <div
+          id="mobile-navigation"
+          className="border-t border-[#DAE0E7] px-4 py-4 md:hidden dark:border-[#374151]"
+        >
           <div className="flex flex-col gap-3">
             <NavLink
               to="/"
@@ -191,11 +224,13 @@ export default function Navbar() {
 
             <div className="mt-2 flex gap-3 border-t border-[#DAE0E7] pt-4 dark:border-[#374151]">
               <button className="h-10 flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white flex items-center justify-center gap-4">
-                <UserRoundPlus size={18} strokeWidth={1.8}/>Register
+                <UserRoundPlus size={18} strokeWidth={1.8} />
+                Register
               </button>
 
               <button className="h-10 flex-1 rounded-lg border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white hover:bg-[#0B81B7] dark:border-[#4B5563] dark:bg-[#1F2937] dark:text-[#F3F4F6] flex items-center justify-center gap-4">
-                <LogIn size={18} strokeWidth={1.8}/>Sign In
+                <LogIn size={18} strokeWidth={1.8} />
+                Sign In
               </button>
             </div>
           </div>
