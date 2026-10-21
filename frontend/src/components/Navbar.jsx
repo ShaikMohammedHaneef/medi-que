@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import logo from "../assets/logo/medique-logo.png";
 import {
   House,
@@ -135,12 +135,14 @@ export default function Navbar() {
               <Moon size={20} strokeWidth={1.8} aria-hidden="true" />
             )}
           </button>
-          <button className="h-9 bg-[#0B81B7] rounded-lg  px-5 text-sm font-medium text-white transition-colors hover:bg-[#096F9D] flex gap-2 items-center">
+          <Link 
+          to="/register-patient"
+          className="h-9 bg-[#0B81B7] rounded-lg  px-5 text-sm font-medium text-white transition-colors hover:bg-[#096F9D] flex gap-2 items-center">
             <UserRoundPlus size={18} strokeWidth={1.8} /> Register
-          </button>
-          <button className="h-9 rounded-lg px-5 border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white dark:border-[#4B5563] hover:bg-[#0B81B7] dark:text-[#F3F4F6] dark:bg-[#1F2937] flex gap-2 items-center">
+          </Link>
+          <Link className="h-9 rounded-lg px-5 border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white dark:border-[#4B5563] hover:bg-[#0B81B7] dark:text-[#F3F4F6] dark:bg-[#1F2937] flex gap-2 items-center">
             <LogIn size={18} strokeWidth={1.8} /> Sign in
-          </button>
+          </Link>
         </div>
 
         <div className="flex md:hidden items-center">
@@ -223,15 +225,16 @@ export default function Navbar() {
             </NavLink>
 
             <div className="mt-2 flex gap-3 border-t border-[#DAE0E7] pt-4 dark:border-[#374151]">
-              <button className="h-10 flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white flex items-center justify-center gap-4">
+              <Link
+              to="/register-patient" className="h-10 flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white flex items-center justify-center gap-4">
                 <UserRoundPlus size={18} strokeWidth={1.8} />
                 Register
-              </button>
+              </Link>
 
-              <button className="h-10 flex-1 rounded-lg border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white hover:bg-[#0B81B7] dark:border-[#4B5563] dark:bg-[#1F2937] dark:text-[#F3F4F6] flex items-center justify-center gap-4">
+              <Link className="h-10 flex-1 rounded-lg border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white hover:bg-[#0B81B7] dark:border-[#4B5563] dark:bg-[#1F2937] dark:text-[#F3F4F6] flex items-center justify-center gap-4">
                 <LogIn size={18} strokeWidth={1.8} />
                 Sign In
-              </button>
+              </Link>
             </div>
           </div>
         </div>

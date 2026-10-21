@@ -16,9 +16,11 @@ export default function Hero() {
         waiting time estimates.
       </p>
       <div className="mt-2 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <button className=" px-5 w-full py-3 sm:flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white transition-colors hover:bg-[#096B98] whitespace-nowrap">
+        <Link
+        to="/register-patient"
+        className=" px-5 w-full py-3 sm:flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white transition-colors hover:bg-[#096B98] whitespace-nowrap">
           Register Patient
-        </button>
+        </Link>
         <Link 
         to="/track-queue" 
         className="border w-full sm:flex-1 whitespace-nowrap border-slate-300/80 dark:border-slate-300/20 px-5 py-3 rounded-lg text-sm font-medium hover:text-white hover:bg-[#0B81B7]">

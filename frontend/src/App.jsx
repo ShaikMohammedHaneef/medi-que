@@ -4,6 +4,7 @@ import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import { Route, Routes } from "react-router";
 import TrackQueue from "./pages/TrackQueue.jsx";
+import RegisterPatient from "./pages/RegisterPatient.jsx"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path="/track-queue" element={<TrackQueue/>}/>
+        <Route path="/register-patient" element={<RegisterPatient/>}/>
         </Routes>
       </main>
       <Footer/>
