@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 import { Search } from "lucide-react";
 import axiosInstance from "../api/axiosInstance.js";
 
 export default function TrackQueue() {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(
+    () => new URLSearchParams(window.location.search).get("token") || "",
+  );
 
   const [queueDetails, setQueueDetails] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -11,21 +14,27 @@ export default function TrackQueue() {
 
   const resultRef = useRef(null);
 
-  useEffect(()=>{
-    if(queueDetails && resultRef.current){
-        resultRef.current.scrollIntoView({
-            behavior:"smooth",
-            block:"start",
-        });
+  const [searchParams] = useSearchParams();
+  const tokenFromUrl = searchParams.get("token") || "";
+
+  useEffect(() => {
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+      trackToken(tokenFromUrl);
+    }
+  }, [tokenFromUrl]);
+
+  useEffect(() => {
+    if (queueDetails && resultRef.current) {
+      resultRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   }, [queueDetails]);
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    const submittedToken = token.trim();
-
-    if (!submittedToken) return;
+  async function trackToken(tokenToTrack) {
+    if (!tokenToTrack.trim()) return;
 
     setLoading(true);
     setError("");
@@ -33,16 +42,20 @@ export default function TrackQueue() {
 
     try {
       const response = await axiosInstance.get(
-        `/patients/track/${encodeURIComponent(submittedToken)}`,
+        `/patients/track/${encodeURIComponent(tokenToTrack.trim())}`,
       );
+
       setQueueDetails(response.data);
     } catch (error) {
-      if (error.response)
-        setError(error.response.data?.message || "Failed to track queue.");
-      else setError(error.message || "Unable to connect to the server.");
+      setError(error.response?.data?.message || "Failed to track queue.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    trackToken(token);
   }
 
   const statusStyles = {
@@ -134,7 +147,7 @@ export default function TrackQueue() {
       </section>
       {queueDetails && (
         <section
-        ref={resultRef}
+          ref={resultRef}
           aria-live="polite"
           className="mx-auto mb-10 scroll-mt-6 max-w-xl rounded-xl border border-[#DAE0E7] bg-white p-5 shadow-sm dark:border-[#374151] dark:bg-[#1F2937] sm:p-6"
         >

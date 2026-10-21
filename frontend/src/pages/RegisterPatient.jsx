@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ClipboardList } from "lucide-react";
 import axiosInstance from "../api/axiosInstance";
+import { Link } from "react-router";
 
 export default function RegisterPatient() {
   const [formData, setFormData] = useState({
@@ -219,7 +220,7 @@ export default function RegisterPatient() {
                   </option>
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
-                  <option value="OTHER">Other</option>
+                  <option value="OTHERS">Others</option>
                 </select>
               </div>
             </div>
@@ -378,6 +379,12 @@ export default function RegisterPatient() {
                   <strong>Patient ID:</strong> {bookingResult.patientId}
                 </p>
               </div>
+              <Link
+                to={`/track-queue?token=${encodeURIComponent(bookingResult.tokenNumber)}`}
+                className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#0B81B7] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#096B98]"
+              >
+                Track Your Queue
+              </Link>
             </div>
           )}
 
