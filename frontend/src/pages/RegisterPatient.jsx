@@ -4,14 +4,15 @@ import axiosInstance from "../api/axiosInstance";
 import { Link } from "react-router";
 
 export default function RegisterPatient() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     fullName: "",
     dateOfBirth: "",
     gender: "",
     phoneNumber: "",
     departmentId: "",
     doctorId: "",
-  });
+  };
+  const [formData, setFormData] = useState(initialFormData);
 
   const [departments, setDepartments] = useState([]);
   const [departmentError, setDepartmentsError] = useState("");
@@ -109,12 +110,14 @@ export default function RegisterPatient() {
       dateOfBirth: formData.dateOfBirth,
       gender: formData.gender,
       phoneNumber: formData.phoneNumber,
-      doctorId: formData.doctorId,
+      doctorId: Number(formData.doctorId)
     };
 
     try {
       const response = await axiosInstance.post("/patients/book", requestData);
       setBookingResult(response.data);
+      setFormData(initialFormData);
+      setDoctors([]);
     } catch (error) {
       setBookingError(
         error.response?.data?.message ||

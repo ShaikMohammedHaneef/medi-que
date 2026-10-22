@@ -17,6 +17,10 @@ export default function TrackQueue() {
   const [searchParams] = useSearchParams();
   const tokenFromUrl = searchParams.get("token") || "";
 
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelError, setCancelError] = useState("");
+  const [cancelSuccess, setCancelSuccess] = useState("");
+
   useEffect(() => {
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
@@ -56,6 +60,49 @@ export default function TrackQueue() {
   function handleSubmit(event) {
     event.preventDefault();
     trackToken(token);
+  }
+
+  async function handleCancelAppointment() {
+    if (!queueDetails?.tokenNumber || cancelLoading) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to cancel appointment ${queueDetails.tokenNumber}?`,
+    );
+
+    if (!confirmed) return;
+
+    setCancelLoading(true);
+    setCancelError("");
+    setCancelSuccess("");
+
+    try {
+      const response = await axiosInstance.patch(
+        `/patients/cancel/${encodeURIComponent(queueDetails.tokenNumber)}`,
+      );
+
+      // Use the updated queue details returned by the backend.
+      setQueueDetails(response.data);
+      setCancelSuccess("Your appointment has been cancelled successfully.");
+    } catch (error) {
+      const status = error.response?.status;
+
+      if (status === 409) {
+        setCancelError(
+          error.response?.data?.message ||
+            "This appointment can no longer be cancelled.",
+        );
+
+        // Refresh the current status in case the queue changed.
+        trackToken(queueDetails.tokenNumber);
+      } else {
+        setCancelError(
+          error.response?.data?.message ||
+            "Unable to cancel your appointment. Please try again.",
+        );
+      }
+    } finally {
+      setCancelLoading(false);
+    }
   }
 
   const statusStyles = {
@@ -224,6 +271,36 @@ export default function TrackQueue() {
                 </p>
               </div>
             </div>
+          )}
+
+          {/* Appointment cancellation */}
+          {queueDetails.status === "WAITING" && (
+            <div className="mt-5 border-t border-[#DAE0E7] pt-4 dark:border-[#374151]">
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Need to cancel your appointment? You can cancel while your token
+                is still waiting.
+              </p>
+
+              <button
+                type="button"
+                onClick={handleCancelAppointment}
+                disabled={cancelLoading}
+                className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#DC2828] px-5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {cancelLoading
+                  ? "Cancelling Appointment..."
+                  : "Cancel Appointment"}
+              </button>
+            </div>
+          )}
+
+          {cancelError && (
+            <p
+              role="alert"
+              className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-300"
+            >
+              {cancelError}
+            </p>
           )}
 
           {/* Final status messages */}

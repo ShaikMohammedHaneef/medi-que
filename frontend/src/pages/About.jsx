@@ -216,7 +216,7 @@ export default function About() {
         />
         <div className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
-            to="/register"
+            to="/register-patient"
             className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#0B81B7] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#096B98] sm:w-auto"
           >
             Register Patient
