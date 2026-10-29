@@ -2,11 +2,13 @@ package com.medique.service;
 
 import com.medique.dto.request.LoginRequest;
 import com.medique.dto.response.AuthenticationResponse;
+import com.medique.dto.response.CurrentUserResponse;
 import com.medique.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,22 @@ public class AuthService {
                     .build();
 
         } catch (BadCredentialsException e){
-            throw new BadCredentialsException("invalid email or password");
+            throw new BadCredentialsException("invalid credentials");
         }
+    }
+
+    public CurrentUserResponse getCurrentUser(Authentication authentication) {
+
+        String email = authentication.getName();
+
+        String role = authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .map(authority -> authority.replaceFirst("^ROLE_", ""))
+                .orElseThrow(() ->
+                        new IllegalStateException("No authority assigned"));
+
+        return new CurrentUserResponse(email, role);
     }
 }

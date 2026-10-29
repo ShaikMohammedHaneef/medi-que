@@ -65,7 +65,9 @@ export default function Navbar() {
   }, [isDark]);
 
   return (
-    <nav className={`sticky top-0 z-50 border-b border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937] transition-transform duration-300 ease-in-out ${isVisible ? "translate-y-0" : "-translate-y-full"}`}>
+    <nav
+      className={`sticky top-0 z-50 border-b border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937] transition-transform duration-300 ease-in-out ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
+    >
       <div className="mx-auto h-16 flex items-center max-w-[1440px] justify-between px-4 sm:px-6 lg:px-8 ">
         {/* left section */}
         <div className="flex items-center gap-8">
@@ -135,12 +137,16 @@ export default function Navbar() {
               <Moon size={20} strokeWidth={1.8} aria-hidden="true" />
             )}
           </button>
-          <Link 
-          to="/register-patient"
-          className="h-9 bg-[#0B81B7] rounded-lg  px-5 text-sm font-medium text-white transition-colors hover:bg-[#096F9D] flex gap-2 items-center">
+          <Link
+            to="/register-patient"
+            className="h-9 bg-[#0B81B7] rounded-lg  px-5 text-sm font-medium text-white transition-colors hover:bg-[#096F9D] flex gap-2 items-center"
+          >
             <UserRoundPlus size={18} strokeWidth={1.8} /> Register Patient
           </Link>
-          <Link className="h-9 rounded-lg px-5 border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white dark:border-[#4B5563] hover:bg-[#0B81B7] dark:text-[#F3F4F6] dark:bg-[#1F2937] flex gap-2 items-center">
+          <Link
+            to="/auth/login"
+            className="h-9 rounded-lg px-5 border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white dark:border-[#4B5563] hover:bg-[#0B81B7] dark:text-[#F3F4F6] dark:bg-[#1F2937] flex gap-2 items-center"
+          >
             <LogIn size={18} strokeWidth={1.8} /> Staff login
           </Link>
         </div>
@@ -194,8 +200,7 @@ export default function Navbar() {
                 }`
               }
             >
-              <House size={18} strokeWidth={1.8} aria-hidden="true" />
-              Home
+              <House size={18} strokeWidth={1.8} aria-hidden="true" /> Home
             </NavLink>
             <NavLink
               to="/track-queue"
@@ -226,12 +231,19 @@ export default function Navbar() {
 
             <div className="mt-2 flex gap-3 border-t border-[#DAE0E7] pt-4 dark:border-[#374151]">
               <Link
-              to="/register-patient" className="h-10 flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white flex items-center justify-center gap-4">
+                to="/register-patient"
+                onClick={() => setMenu(false)}
+                className="h-10 flex-1 rounded-lg bg-[#0B81B7] text-sm font-medium text-white flex items-center justify-center gap-4"
+              >
                 <UserRoundPlus size={18} strokeWidth={1.8} />
                 Register
               </Link>
 
-              <Link className="h-10 flex-1 rounded-lg border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white hover:bg-[#0B81B7] dark:border-[#4B5563] dark:bg-[#1F2937] dark:text-[#F3F4F6] flex items-center justify-center gap-4">
+              <Link
+                to="/auth/login"
+                onClick={() => setMenu(false)}
+                className="h-10 flex-1 rounded-lg border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white hover:bg-[#0B81B7] dark:border-[#4B5563] dark:bg-[#1F2937] dark:text-[#F3F4F6] flex items-center justify-center gap-4"
+              >
                 <LogIn size={18} strokeWidth={1.8} />
                 Sign In
               </Link>
