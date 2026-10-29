@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ClipboardList } from "lucide-react";
 import axiosInstance from "../api/axiosInstance";
 import { Link } from "react-router";
@@ -25,6 +25,17 @@ export default function RegisterPatient() {
   const [bookingResult, setBookingResult] = useState(null);
   const [bookingError, setBookingError] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
+
+  const bookingResultRef = useRef(null);
+
+  useEffect(() => {
+    if (bookingResult && bookingResultRef.current) {
+      bookingResultRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [bookingResult]);
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -110,7 +121,7 @@ export default function RegisterPatient() {
       dateOfBirth: formData.dateOfBirth,
       gender: formData.gender,
       phoneNumber: formData.phoneNumber,
-      doctorId: Number(formData.doctorId)
+      doctorId: Number(formData.doctorId),
     };
 
     try {
@@ -353,6 +364,7 @@ export default function RegisterPatient() {
           </form>
           {bookingResult && (
             <div
+              ref={bookingResultRef}
               role="status"
               className="rounded-xl border mt-5 border-[#42A979] bg-emerald-50 p-5 dark:bg-emerald-950/30"
             >

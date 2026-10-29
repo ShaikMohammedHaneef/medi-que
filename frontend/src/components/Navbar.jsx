@@ -138,10 +138,10 @@ export default function Navbar() {
           <Link 
           to="/register-patient"
           className="h-9 bg-[#0B81B7] rounded-lg  px-5 text-sm font-medium text-white transition-colors hover:bg-[#096F9D] flex gap-2 items-center">
-            <UserRoundPlus size={18} strokeWidth={1.8} /> Register
+            <UserRoundPlus size={18} strokeWidth={1.8} /> Register Patient
           </Link>
           <Link className="h-9 rounded-lg px-5 border border-[#DAE0E7] bg-white text-sm font-medium text-[#1D2530] hover:text-white dark:border-[#4B5563] hover:bg-[#0B81B7] dark:text-[#F3F4F6] dark:bg-[#1F2937] flex gap-2 items-center">
-            <LogIn size={18} strokeWidth={1.8} /> Sign in
+            <LogIn size={18} strokeWidth={1.8} /> Staff login
           </Link>
         </div>
 
