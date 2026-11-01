@@ -97,7 +97,7 @@ Detailed project documentation is available in the `docs/` directory.
 - [Project Plan](PROJECT_PLAN.md)
 - [System Architecture](docs/architecture.md)
 - [Database Design](database/README.md)
-- [API Documentation](docs/api/api.md)
+- [API Documentation](docs/api/API.md)
 
 
 # Installation
