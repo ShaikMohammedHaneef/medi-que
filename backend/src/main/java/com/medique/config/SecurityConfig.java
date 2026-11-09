@@ -55,8 +55,7 @@ public class  SecurityConfig {
 
         configuration.setAllowedOrigins(
                 List.of("http://localhost:5173",
-                        "http://192.168.1.7:5173",
-                        "http://10.222.10.189:5173"
+                        "http://192.168.1.7:5173"
                 )
         );
 
@@ -95,7 +94,8 @@ public class  SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/me").authenticated()
                         .requestMatchers("/api/departments/**").permitAll()
                         .requestMatchers("/api/patients/**").permitAll()
 
