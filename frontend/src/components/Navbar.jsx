@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/logo/medique-logo.png";
+import useTheme from "../hooks/useTheme";
 import {
   House,
   Users,
@@ -44,19 +45,7 @@ export default function Navbar() {
     };
   }, []);
 
-  const [isDark, setIsDark] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme !== null) {
-      return savedTheme === "dark";
-    }
-
-    return false;
-  });
-
-  const toggleTheme = () => {
-    setIsDark((prev) => !prev);
-  };
+   const { isDark, toggleTheme } = useTheme();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
