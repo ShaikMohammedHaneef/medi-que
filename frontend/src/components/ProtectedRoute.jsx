@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
 import axiosInstance from "../api/axiosInstance";
+import AccessDenied from "../pages/AccessDenied.jsx";
 
 function ProtectedRoute({ allowedRoles }) {
   const [status, setStatus] = useState("loading");
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     async function verifyUser() {
@@ -18,6 +20,7 @@ function ProtectedRoute({ allowedRoles }) {
         const response = await axiosInstance.get("/auth/me");
 
         const userRole = response.data.role;
+        setUserRole(userRole);
 
         if (allowedRoles.includes(userRole)) {
           setStatus("authorized");
@@ -46,11 +49,15 @@ function ProtectedRoute({ allowedRoles }) {
   }
 
   if (status === "forbidden") {
-    return <div className="p-6">You are not authorized to access this page.</div>;
-  }
+  return <AccessDenied role={userRole} />;
+}
 
   if (status === "error") {
-    return <div className="p-6">Unable to verify your session. Please try again.</div>;
+    return (
+      <div className="p-6">
+        Unable to verify your session. Please try again.
+      </div>
+    );
   }
 
   return <Outlet />;
