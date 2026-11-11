@@ -39,7 +39,7 @@ public class DepartmentService {
         Department department = DepartmentMapper.toEntity(request);
 
         if (departmentRepository.existsByName(department.getName()))
-            throw new DepartmentAlreadyExistsException("Department '" + department.getName() + "' already Exists");
+            throw new DepartmentAlreadyExistsException("Department " + department.getName() + " already Exists");
 
         return DepartmentMapper.toResponse(departmentRepository.save(department));
     }
