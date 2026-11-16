@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ClipboardList } from "lucide-react";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "../../api/axiosInstance";
 import { Link } from "react-router";
 
 export default function RegisterPatient() {

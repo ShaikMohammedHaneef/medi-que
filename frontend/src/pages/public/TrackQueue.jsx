@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Search } from "lucide-react";
-import axiosInstance from "../api/axiosInstance.js";
+import axiosInstance from "../../api/axiosInstance.js";
 
 export default function TrackQueue() {
   const [token, setToken] = useState(

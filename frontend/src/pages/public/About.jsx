@@ -10,10 +10,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import AboutHero from "../components/AboutHero.jsx";
-import SectionHeading from "../components/SectionHeading.jsx";
-import InfoCard from "../components/InfoCard.jsx";
-import Mission from "../components/Mission.jsx";
+import AboutHero from "../../components/AboutHero.jsx";
+import SectionHeading from "../../components/SectionHeading.jsx";
+import InfoCard from "../../components/InfoCard.jsx";
+import Mission from "../../components/Mission.jsx";
 import { Link } from "react-router";
 
 const problems = [

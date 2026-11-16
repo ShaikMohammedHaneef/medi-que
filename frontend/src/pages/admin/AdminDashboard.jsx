@@ -11,7 +11,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import axiosInstance from "../api/axiosInstance.js";
+import axiosInstance from "../../api/axiosInstance.js";
 
 function AdminDashboard() {
   const [dashboardData, setDashboardData] = useState({

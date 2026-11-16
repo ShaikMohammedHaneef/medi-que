@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Power, Building2 } from "lucide-react";
-import axiosInstance from "../api/axiosInstance.js";
+import axiosInstance from "../../api/axiosInstance.js";
 
 function AdminDepartments() {
   const [departments, setDepartments] = useState([]);

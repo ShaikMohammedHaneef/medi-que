@@ -7,17 +7,18 @@ import {
   adminNavigation,
   receptionistNavigation,
 } from "./config/staffNavigation.js";
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import TrackQueue from "./pages/TrackQueue.jsx";
-import RegisterPatient from "./pages/RegisterPatient.jsx";
-import Login from "./pages/Login.jsx";
-import DoctorDashboard from "./pages/DoctorDashboard.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import ReceptionistDashboard from "./pages/ReceptionistDashboard.jsx";
+import Home from "./pages/public/Home.jsx";
+import About from "./pages/public/About.jsx";
+import TrackQueue from "./pages/public/TrackQueue.jsx";
+import RegisterPatient from "./pages/public/RegisterPatient.jsx";
+import Login from "./pages/public/Login.jsx";
+import DoctorDashboard from "./pages/doctor/DoctorDashboard.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import ReceptionistDashboard from "./pages/receptionist/ReceptionistDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import AdminDepartments from "./pages/AdminDepartments.jsx";
-import AdminDoctors from "./pages/AdminDoctors.jsx";
+import AdminDepartments from "./pages/admin/AdminDepartments.jsx";
+import AdminDoctors from "./pages/admin/AdminDoctors.jsx";
+import AdminReceptionists from "./pages/admin/AdminReceptionists.jsx";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="departments" element={<AdminDepartments />} />
           <Route path="doctors" element={<AdminDoctors />} />
+          <Route path="receptionists" element={<AdminReceptionists />} />
         </Route>
       </Route>
       {/* DOCTOR dashboards */}

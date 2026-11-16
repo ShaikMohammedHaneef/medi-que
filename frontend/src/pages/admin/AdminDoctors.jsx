@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Power, Stethoscope } from "lucide-react";
-import axiosInstance from "../api/axiosInstance.js";
+import axiosInstance from "../../api/axiosInstance.js";
 
 function AdminDoctors() {
   const [doctors, setDoctors] = useState([]);
