@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Power, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
 import axiosInstance from "../../api/axiosInstance.js";
+import AdminConfirmModal from "../../components/admin/AdminConfirmModal.jsx";
+import AdminFormModal from "../../components/admin/AdminFormModal.jsx";
+import StatusBadge from "../../components/admin/StatusBadge.jsx";
+import AdminPageHeader from "../../components/admin/AdminPageHeader.jsx";
+import AdminActionButtons from "../../components/admin/AdminActionButtons.jsx";
 
 function AdminDepartments() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+
+  const [statusError, setStatusError] = useState("");
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", description: "" });
@@ -45,9 +52,7 @@ function AdminDepartments() {
       const response = await axiosInstance.get("/admin/departments");
       setDepartments(response.data);
 
-      setShowAddModal(false);
-      setEditingDepartment(null);
-      setFormData({ name: "", description: "" });
+      handleCloseModal();
     } catch (error) {
       console.error("Failed to save department:", error);
       setFormError(
@@ -75,6 +80,7 @@ function AdminDepartments() {
   }, []);
 
   const handleToggleDepartment = async (department) => {
+    setStatusError("");
     if (department.active) {
       setSelectedDepartment(department);
       return;
@@ -85,6 +91,8 @@ function AdminDepartments() {
 
   const updateDepartmentStatus = async (department, action) => {
     try {
+      setStatusError("");
+
       const response = await axiosInstance.patch(
         `/admin/departments/${department.departmentId}/${action}`,
       );
@@ -98,6 +106,9 @@ function AdminDepartments() {
       setSelectedDepartment(null);
     } catch (error) {
       console.error("Failed to update department status:", error);
+      setStatusError(
+        error.response?.data?.message || "Unable to update department status.",
+      );
     }
   };
 
@@ -119,47 +130,46 @@ function AdminDepartments() {
     );
   }
 
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingDepartment(null);
+    setFormData({ name: "", description: "" });
+    setFormError("");
+  };
+
+  const handleEditDepartment = (department) => {
+    setEditingDepartment(department);
+
+    setFormData({
+      name: department.name,
+      description: department.description || "",
+    });
+
+    setFormError("");
+    setShowAddModal(true);
+  };
+
   return (
     <div className="w-full space-y-6">
       {/* Page heading */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-            Department Management
-          </h1>
-          <p className="mt-1 text-sm text-[#657386] dark:text-[#AAB4C2]">
-            Create and manage hospital departments.
-          </p>
-        </div>
+      <AdminPageHeader
+        title="Department Management"
+        description="Create and manage hospital departments."
+        buttonLabel="Add Department"
+        onAdd={() => {
+          handleCloseModal();
+          setShowAddModal(true);
+        }}
+        icon={Building2}
+        countLabel="Total Departments"
+        count={departments.length}
+      />
 
-        <button
-          onClick={() => {
-            setFormError("");
-            setShowAddModal(true);
-          }}
-          className="flex items-center justify-center gap-2 rounded-lg bg-[#0B81B7] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#096D9B]"
-        >
-          <Plus size={18} />
-          Add Department
-        </button>
-      </div>
-
-      {/* Department count */}
-      <div className="flex items-center gap-3 rounded-xl border border-[#DAE0E7] bg-white p-4 dark:border-[#374151] dark:bg-[#1F2937]">
-        <div className="rounded-lg bg-[#E2F5FD] p-3 dark:bg-[#123B4D]">
-          <Building2 size={22} className="text-[#0B81B7] dark:text-[#72C9EB]" />
-        </div>
-
-        <div>
-          <p className="text-sm text-[#657386] dark:text-[#AAB4C2]">
-            Total Departments
-          </p>
-          <p className="text-2xl font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-            {departments.length}
-          </p>
-        </div>
-      </div>
-
+      {statusError && (
+        <p className="text-sm text-[#DC2828] dark:text-[#EF5350]">
+          {statusError}
+        </p>
+      )}
       {/* Departments table */}
       <div className="overflow-hidden rounded-xl border border-[#DAE0E7] bg-white dark:border-[#374151] dark:bg-[#1F2937]">
         <div className="border-b border-[#DAE0E7] px-5 py-4 dark:border-[#374151]">
@@ -205,47 +215,15 @@ function AdminDepartments() {
                     </td>
 
                     <td className="px-5 py-4">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-medium ${
-                          department.active
-                            ? "bg-[#E8F6EF] text-[#278557] dark:bg-[#173D30] dark:text-[#50C48D]"
-                            : "bg-[#FDECEC] text-[#DC2828] dark:bg-[#4A2424] dark:text-[#EF5350]"
-                        }`}
-                      >
-                        {department.active ? "Active" : "Inactive"}
-                      </span>
+                      <StatusBadge active={department.active} />
                     </td>
 
                     <td className="px-5 py-4">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          title="Edit department"
-                          onClick={() => {
-                            setEditingDepartment(department);
-                            setFormData({
-                              name: department.name,
-                              description: department.description || "",
-                            });
-                            setFormError("");
-                            setShowAddModal(true);
-                          }}
-                          className="rounded-lg p-2 text-[#0B81B7] transition hover:bg-[#E2F5FD] dark:text-[#72C9EB] dark:hover:bg-[#123B4D]"
-                        >
-                          <Pencil size={18} />
-                        </button>
-
-                        <button
-                          title={
-                            department.active
-                              ? "Deactivate department"
-                              : "Activate department"
-                          }
-                          onClick={() => handleToggleDepartment(department)}
-                          className="rounded-lg p-2 text-[#657386] transition hover:bg-[#F3F4F6] dark:text-[#AAB4C2] dark:hover:bg-[#374151]"
-                        >
-                          <Power size={18} />
-                        </button>
-                      </div>
+                      <AdminActionButtons
+                        active={department.active}
+                        onEdit={() => handleEditDepartment(department)}
+                        onToggle={() => handleToggleDepartment(department)}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -254,123 +232,61 @@ function AdminDepartments() {
           </div>
         )}
       </div>
-      {selectedDepartment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-[#1F2937]">
-            <h2 className="text-lg font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-              Deactivate Department?
-            </h2>
+      <AdminFormModal
+        isOpen={showAddModal}
+        title={editingDepartment ? "Edit Department" : "Add Department"}
+        description="Enter the details of the department."
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitDepartment}
+        submitting={submitting}
+        submitLabel={editingDepartment ? "Save Changes" : "Create Department"}
+      >
+        {formError && (
+          <p className="text-sm text-[#DC2828] dark:text-[#EF5350]">
+            {formError}
+          </p>
+        )}
 
-            <p className="mt-2 text-sm text-[#657386] dark:text-[#AAB4C2]">
-              Are you sure you want to deactivate{" "}
-              <span className="font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-                {selectedDepartment.name}
-              </span>
-              ? It will no longer be available for new patient registrations.
-            </p>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={() => setSelectedDepartment(null)}
-                className="rounded-lg border border-[#DAE0E7] px-4 py-2 text-sm font-medium text-[#657386] hover:bg-[#F9FAFB] dark:border-[#374151] dark:text-[#AAB4C2] dark:hover:bg-[#273548]"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={() =>
-                  updateDepartmentStatus(selectedDepartment, "deactivate")
-                }
-                className="rounded-lg bg-[#DC2828] px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-              >
-                Deactivate
-              </button>
-            </div>
-          </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-[#1D2530] dark:text-[#F3F4F6]">
+            Department Name
+          </label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="e.g. Cardiology"
+            required
+            className="w-full rounded-lg border border-[#DAE0E7] bg-white px-3 py-2.5 text-sm text-[#1D2530] outline-none focus:border-[#0B81B7] dark:border-[#374151] dark:bg-[#273548] dark:text-[#F3F4F6]"
+          />
         </div>
-      )}
 
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-[#1F2937]">
-            <div className="mb-5">
-              <h2 className="text-xl font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-                {editingDepartment ? "Edit Department" : "Add Department"}
-              </h2>
-              <p className="mt-1 text-sm text-[#657386] dark:text-[#AAB4C2]">
-                Enter the details of the new department.
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmitDepartment} className="space-y-4">
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-[#1D2530] dark:text-[#F3F4F6]">
-                  Department Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  placeholder="e.g. Cardiology"
-                  required
-                  className="w-full rounded-lg border border-[#DAE0E7] bg-white px-3 py-2.5 text-sm text-[#1D2530] outline-none focus:border-[#0B81B7] dark:border-[#374151] dark:bg-[#273548] dark:text-[#F3F4F6]"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-[#1D2530] dark:text-[#F3F4F6]">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  placeholder="Briefly describe this department"
-                  rows={3}
-                  className="w-full resize-none rounded-lg border border-[#DAE0E7] bg-white px-3 py-2.5 text-sm text-[#1D2530] outline-none focus:border-[#0B81B7] dark:border-[#374151] dark:bg-[#273548] dark:text-[#F3F4F6]"
-                />
-              </div>
-
-              {formError && (
-                <p className="text-sm text-[#DC2828] dark:text-[#EF5350]">
-                  {formError}
-                </p>
-              )}
-
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAddModal(false);
-                    setEditingDepartment(null);
-                    setFormData({ name: "", description: "" });
-                    setFormError("");
-                  }}
-                  disabled={submitting}
-                  className="rounded-lg border border-[#DAE0E7] px-4 py-2 text-sm font-medium text-[#657386] dark:border-[#374151] dark:text-[#AAB4C2]"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="rounded-lg bg-[#0B81B7] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#096D9B] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {submitting
-                    ? "Saving..."
-                    : editingDepartment
-                      ? "Save Changes"
-                      : "Create Department"}
-                </button>
-              </div>
-            </form>
-          </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-[#1D2530] dark:text-[#F3F4F6]">
+            Description
+          </label>
+          <textarea
+            value={formData.description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            placeholder="Briefly describe this department"
+            rows={3}
+            className="w-full resize-none rounded-lg border border-[#DAE0E7] bg-white px-3 py-2.5 text-sm text-[#1D2530] outline-none focus:border-[#0B81B7] dark:border-[#374151] dark:bg-[#273548] dark:text-[#F3F4F6]"
+          />
         </div>
-      )}
+      </AdminFormModal>
+
+      <AdminConfirmModal
+        isOpen={!!selectedDepartment}
+        title="Deactivate Department"
+        message={`Are you sure you want to deactivate ${selectedDepartment?.name}?`}
+        onClose={() => setSelectedDepartment(null)}
+        onConfirm={() =>
+          updateDepartmentStatus(selectedDepartment, "deactivate")
+        }
+        confirmLabel="Deactivate"
+      />
     </div>
   );
 }

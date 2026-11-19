@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Power, Stethoscope } from "lucide-react";
+import { Stethoscope } from "lucide-react";
 import axiosInstance from "../../api/axiosInstance.js";
+import AdminConfirmModal from "../../components/admin/AdminConfirmModal";
+import AdminFormModal from "../../components/admin/AdminFormModal.jsx";
+import StatusBadge from "../../components/admin/StatusBadge.jsx";
+import AdminActionButtons from "../../components/admin/AdminActionButtons.jsx";
+import AdminPageHeader from "../../components/admin/AdminPageHeader.jsx";
 
 function AdminDoctors() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [statusError, setStatusError] = useState("");
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -28,6 +34,8 @@ function AdminDoctors() {
 
   const updateDoctorStatus = async (doctor, action) => {
     try {
+      setStatusError("");
+
       const response = await axiosInstance.patch(
         `/admin/doctors/${doctor.doctorId}/${action}`,
       );
@@ -41,13 +49,14 @@ function AdminDoctors() {
       setSelectedDoctor(null);
     } catch (error) {
       console.error("Failed to update doctor status:", error);
-      setError(
+      setStatusError(
         error.response?.data?.message || "Unable to update doctor status.",
       );
     }
   };
 
   const handleToggleDoctor = (doctor) => {
+    setStatusError("");
     if (doctor.active) {
       setSelectedDoctor(doctor);
       return;
@@ -65,7 +74,6 @@ function AdminDoctors() {
         console.error("Failed to fetch departments:", error);
       }
     };
-
     fetchDepartments();
   }, []);
 
@@ -114,17 +122,7 @@ function AdminDoctors() {
       const response = await axiosInstance.get("/admin/doctors");
       setDoctors(response.data);
 
-      setShowAddModal(false);
-      setEditingDoctor(null);
-      setFormData({
-        doctorCode: "",
-        fullName: "",
-        email: "",
-        password: "",
-        phoneNumber: "",
-        qualification: "",
-        departmentId: "",
-      });
+      handleCloseModal();
     } catch (error) {
       console.error("Failed to save doctor:", error);
       setFormError(error.response?.data?.message || "Unable to save doctor.");
@@ -149,53 +147,62 @@ function AdminDoctors() {
     fetchDoctors();
   }, []);
 
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingDoctor(null);
+    setFormError("");
+
+    setFormData({
+      doctorCode: "",
+      fullName: "",
+      email: "",
+      password: "",
+      phoneNumber: "",
+      qualification: "",
+      departmentId: "",
+    });
+  };
+
+  const handleEditDoctor = (doctor) => {
+    setEditingDoctor(doctor);
+
+    setFormData({
+      doctorCode: doctor.doctorCode,
+      fullName: doctor.fullName,
+      email: doctor.email,
+      password: "",
+      phoneNumber: doctor.phoneNumber,
+      qualification: doctor.qualification,
+      departmentId:
+        departments.find(
+          (department) => department.name === doctor.departmentName,
+        )?.departmentId || "",
+    });
+
+    setFormError("");
+    setShowAddModal(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Page heading */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-            Doctor Management
-          </h1>
-          <p className="text-sm text-[#657386] dark:text-[#AAB4C2] mt-1">
-            Manage doctors and their department assignments.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            setFormError("");
-            setShowAddModal(true);
-          }}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#0B81B7] hover:bg-[#096D9B] text-white text-sm font-medium transition"
-        >
-          <Plus size={18} />
-          Add Doctor
-        </button>
-      </div>
-
-      {/* Doctor count */}
-      <div className="bg-white dark:bg-[#1F2937] border border-[#DAE0E7] dark:border-[#374151] rounded-xl p-5">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-[#E2F5FD] dark:bg-[#123B4D]">
-            <Stethoscope
-              size={22}
-              className="text-[#0B81B7] dark:text-[#72C9EB]"
-            />
-          </div>
-
-          <div>
-            <p className="text-sm text-[#657386] dark:text-[#AAB4C2]">
-              Total Doctors
-            </p>
-            <p className="text-2xl font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-              {doctors.length}
-            </p>
-          </div>
-        </div>
-      </div>
-
+      <AdminPageHeader
+        title="Doctor Management"
+        description="Manage doctors and their department assignments."
+        buttonLabel="Add Doctor"
+        onAdd={() => {
+          handleCloseModal();
+          setShowAddModal(true);
+        }}
+        icon={Stethoscope}
+        countLabel="Total Doctors"
+        count={doctors.length}
+      />
+      {statusError && (
+        <p className="text-sm text-[#DC2828] dark:text-[#EF5350]">
+          {statusError}
+        </p>
+      )}
       {/* Doctors table */}
       <div className="bg-white dark:bg-[#1F2937] border border-[#DAE0E7] dark:border-[#374151] rounded-xl overflow-hidden">
         <div className="p-5 border-b border-[#DAE0E7] dark:border-[#374151]">
@@ -262,15 +269,7 @@ function AdminDoctors() {
                     </td>
 
                     <td className="px-5 py-4">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                          doctor.active
-                            ? "bg-[#E8F7EF] text-[#258653] dark:bg-[#16402E] dark:text-[#50C48D]"
-                            : "bg-[#FEECEC] text-[#DC2828] dark:bg-[#4B2020] dark:text-[#EF5350]"
-                        }`}
-                      >
-                        {doctor.active ? "Active" : "Inactive"}
-                      </span>
+                      <StatusBadge active={doctor.active} />
                     </td>
 
                     <td className="px-5 py-4">
@@ -286,50 +285,11 @@ function AdminDoctors() {
                     </td>
 
                     <td className="px-5 py-4">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          type="button"
-                          title="Edit doctor"
-                          onClick={() => {
-                            setEditingDoctor(doctor);
-                            setFormData({
-                              doctorCode: doctor.doctorCode,
-                              fullName: doctor.fullName,
-                              email: doctor.email,
-                              password: "",
-                              phoneNumber: doctor.phoneNumber,
-                              qualification: doctor.qualification,
-                              departmentId:
-                                departments.find(
-                                  (department) =>
-                                    department.name === doctor.departmentName,
-                                )?.departmentId || "",
-                            });
-                            setFormError("");
-                            setShowAddModal(true);
-                          }}
-                          className="p-2 rounded-lg text-[#0B81B7] hover:bg-[#E2F5FD] dark:hover:bg-[#123B4D] transition"
-                        >
-                          <Pencil size={17} />
-                        </button>
-
-                        <button
-                          type="button"
-                          title={
-                            doctor.active
-                              ? "Deactivate doctor"
-                              : "Activate doctor"
-                          }
-                          className={`p-2 rounded-lg transition ${
-                            doctor.active
-                              ? "text-[#DC2828] hover:bg-[#FEECEC] dark:hover:bg-[#4B2020]"
-                              : "text-[#42A979] hover:bg-[#E8F7EF] dark:hover:bg-[#16402E]"
-                          }`}
-                          onClick={() => handleToggleDoctor(doctor)}
-                        >
-                          <Power size={17} />
-                        </button>
-                      </div>
+                      <AdminActionButtons
+                        active={doctor.active}
+                        onEdit={() => handleEditDoctor(doctor)}
+                        onToggle={() => handleToggleDoctor(doctor)}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -339,156 +299,77 @@ function AdminDoctors() {
         )}
       </div>
 
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-white dark:bg-[#1F2937] shadow-xl">
-            <div className="p-5 border-b border-[#DAE0E7] dark:border-[#374151]">
-              <h2 className="text-lg font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-                {editingDoctor ? "Edit Doctor" : "Add Doctor"}
-              </h2>
-              <p className="text-sm text-[#657386] dark:text-[#AAB4C2] mt-1">
-                Enter the doctor's details to create an account.
-              </p>
-            </div>
+      <AdminFormModal
+        isOpen={showAddModal}
+        title={editingDoctor ? "Edit Doctor" : "Add Doctor"}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitDoctor}
+        submitting={submitting}
+        submitLabel={editingDoctor ? "Save Changes" : "Create Doctor"}
+      >
+        {formError && <p className="text-sm text-red-600">{formError}</p>}
 
-            <form onSubmit={handleSubmitDoctor} className="p-5 space-y-4">
-              {formError && (
-                <p className="text-sm text-[#DC2828] bg-[#FEECEC] dark:bg-[#4B2020] p-3 rounded-lg">
-                  {formError}
-                </p>
-              )}
+        {[
+          ["doctorCode", "Doctor Code", "Enter doctor code", "text"],
+          ["fullName", "Full Name", "Enter full name", "text"],
+          ["email", "Email", "Enter email address", "email"],
+          ...(!editingDoctor
+            ? [["password", "Password", "Enter password", "password"]]
+            : []),
+          ["phoneNumber", "Phone Number", "Enter phone number", "tel"],
+          ["qualification", "Qualification", "Enter qualification", "text"],
+        ].map(([name, label, placeholder, type]) => (
+          <div key={name}>
+            <label className="block text-sm font-medium mb-1 text-[#1D2530] dark:text-[#F3F4F6]">
+              {label}
+            </label>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  ["doctorCode", "Doctor Code", "Enter unique doctor code"],
-                  ["fullName", "Full Name", "Enter doctor's full name"],
-                  ["email", "Email", "Enter email address"],
-                  ...(!editingDoctor
-                    ? [["password", "Password", "Create a password"]]
-                    : []),
-                  ["phoneNumber", "Phone Number", "Enter phone number"],
-                  ["qualification", "Qualification", "Enter qualification"],
-                ].map(([name, label, placeholder]) => (
-                  <div key={name}>
-                    <label className="block text-sm font-medium text-[#1D2530] dark:text-[#F3F4F6] mb-1.5">
-                      {label}
-                    </label>
-
-                    <input
-                      type={
-                        name === "password"
-                          ? "password"
-                          : name === "email"
-                            ? "email"
-                            : "text"
-                      }
-                      name={name}
-                      value={formData[name]}
-                      onChange={handleInputChange}
-                      placeholder={placeholder}
-                      required
-                      className="w-full px-3 py-2.5 rounded-lg border border-[#DAE0E7] dark:border-[#374151] bg-white dark:bg-[#273548] text-[#1D2530] dark:text-[#F3F4F6] text-sm outline-none focus:border-[#0B81B7]"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#1D2530] dark:text-[#F3F4F6] mb-1.5">
-                  Department
-                </label>
-
-                <select
-                  name="departmentId"
-                  value={formData.departmentId}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2.5 rounded-lg border border-[#DAE0E7] dark:border-[#374151] bg-white dark:bg-[#273548] text-[#1D2530] dark:text-[#F3F4F6] text-sm outline-none focus:border-[#0B81B7]"
-                >
-                  <option value="">Select Department</option>
-
-                  {departments.map((department) => (
-                    <option
-                      key={department.departmentId}
-                      value={department.departmentId}
-                    >
-                      {department.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAddModal(false);
-                    setEditingDoctor(null);
-                    setFormError("");
-                    setFormData({
-                      doctorCode: "",
-                      fullName: "",
-                      email: "",
-                      password: "",
-                      phoneNumber: "",
-                      qualification: "",
-                      departmentId: "",
-                    });
-                  }}
-                  className="px-4 py-2.5 rounded-lg border border-[#DAE0E7] dark:border-[#374151] text-sm text-[#657386] dark:text-[#AAB4C2]"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-4 py-2.5 rounded-lg bg-[#0B81B7] hover:bg-[#096D9B] disabled:opacity-60 text-white text-sm font-medium"
-                >
-                  {submitting
-                    ? "Saving..."
-                    : editingDoctor
-                      ? "Save Changes"
-                      : "Create Doctor"}
-                </button>
-              </div>
-            </form>
+            <input
+              type={type}
+              name={name}
+              value={formData[name]}
+              onChange={handleInputChange}
+              placeholder={placeholder}
+              required
+              className="w-full rounded-lg border border-[#DAE0E7] dark:border-[#374151] bg-white dark:bg-[#273548] px-3 py-2.5 text-sm text-[#1D2530] dark:text-white outline-none focus:ring-2 focus:ring-[#0B81B7]"
+            />
           </div>
-        </div>
-      )}
-      {selectedDoctor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white dark:bg-[#1F2937] shadow-xl p-6">
-            <h2 className="text-lg font-semibold text-[#1D2530] dark:text-[#F3F4F6]">
-              Deactivate Doctor?
-            </h2>
+        ))}
 
-            <p className="text-sm text-[#657386] dark:text-[#AAB4C2] mt-3">
-              Are you sure you want to deactivate{" "}
-              <strong>{selectedDoctor.fullName}</strong>? This doctor will no
-              longer be available for new patient bookings.
-            </p>
+        <div>
+          <label className="block text-sm font-medium mb-1 text-[#1D2530] dark:text-[#F3F4F6]">
+            Department
+          </label>
 
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                type="button"
-                onClick={() => setSelectedDoctor(null)}
-                className="px-4 py-2.5 rounded-lg border border-[#DAE0E7] dark:border-[#374151] text-sm text-[#657386] dark:text-[#AAB4C2]"
+          <select
+            name="departmentId"
+            value={formData.departmentId}
+            onChange={handleInputChange}
+            required
+            className="w-full rounded-lg border border-[#DAE0E7] dark:border-[#374151] bg-white dark:bg-[#273548] px-3 py-2.5 text-sm text-[#1D2530] dark:text-white"
+          >
+            <option value="">Select Department</option>
+
+            {departments.map((department) => (
+              <option
+                key={department.departmentId}
+                value={department.departmentId}
               >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={() => updateDoctorStatus(selectedDoctor, "deactivate")}
-                className="px-4 py-2.5 rounded-lg bg-[#DC2828] hover:bg-[#B91C1C] text-white text-sm font-medium"
-              >
-                Deactivate
-              </button>
-            </div>
-          </div>
+                {department.name}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
+      </AdminFormModal>
+
+      <AdminConfirmModal
+        isOpen={!!selectedDoctor}
+        title="Deactivate Doctor"
+        message={`Are you sure you want to deactivate ${selectedDoctor?.fullName}? They will no longer be able to log in.`}
+        onClose={() => setSelectedDoctor(null)}
+        onConfirm={() => updateDoctorStatus(selectedDoctor, "deactivate")}
+        confirmLabel="Deactivate"
+      />
     </div>
   );
 }
