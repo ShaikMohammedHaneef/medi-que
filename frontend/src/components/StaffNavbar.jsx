@@ -102,7 +102,10 @@ function StaffNavbar({
               </div>
               <button
                 type="button"
-                onClick={toggleTheme}
+                onClick={()=>{
+                  toggleTheme();
+                  setProfileOpen(false)
+                }}
                 className="flex w-full items-center gap-3 px-4 py-3 text-sm text-[#657386] transition-colors hover:bg-[#F3F4F6] dark:text-[#AAB4C2] dark:hover:bg-[#273548] lg:hidden"
               >
                 {isDark ? <Sun size={17} /> : <Moon size={17} />}
