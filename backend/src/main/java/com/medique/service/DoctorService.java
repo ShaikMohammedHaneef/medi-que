@@ -16,6 +16,7 @@ import com.medique.mapper.QueueTokenMapper;
 import com.medique.repository.DepartmentRepository;
 import com.medique.repository.DoctorRepository;
 import com.medique.repository.QueueTokenRepository;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -231,5 +232,10 @@ public class DoctorService {
         );
 
 
+    }
+
+    public Boolean getAvailability() {
+        Doctor doctor = getAuthenticatedDoctor();
+        return doctor.isAvailable();
     }
 }

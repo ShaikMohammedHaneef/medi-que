@@ -84,4 +84,9 @@ public class DoctorController {
     public ResponseEntity<DoctorAdminResponse> updateAvailability(@RequestBody AvailabilityRequest request){
         return ResponseEntity.ok(doctorService.updateAvailability(request.isAvailable()));
     }
+
+    @GetMapping("/doctors/availability")
+    public ResponseEntity<Boolean> getAvailability() {
+        return ResponseEntity.ok(doctorService.getAvailability());
+    }
 }
