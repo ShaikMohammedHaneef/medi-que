@@ -19,6 +19,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import AdminDepartments from "./pages/admin/AdminDepartments.jsx";
 import AdminDoctors from "./pages/admin/AdminDoctors.jsx";
 import AdminReceptionists from "./pages/admin/AdminReceptionists.jsx";
+import DoctorLiveQueue from "./pages/doctor/DoctorLiveQueue.jsx";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
           }
         >
           <Route path="dashboard" element={<DoctorDashboard />} />
+          <Route path="queue" element={<DoctorLiveQueue />} />
         </Route>
       </Route>
       {/* RECEPTIONIST dashboards */}

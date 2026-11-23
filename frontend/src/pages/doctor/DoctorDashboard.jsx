@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Users, Clock, Activity, CheckCircle } from "lucide-react";
+import { Users, Clock, CheckCircle } from "lucide-react";
 import axiosInstance from "../../api/axiosInstance.js";
 
 function DoctorDashboard() {
@@ -43,13 +43,6 @@ function DoctorDashboard() {
       bg: "bg-amber-50 dark:bg-amber-950/40",
     },
     {
-      label: "In Progress",
-      count: queue.filter((p) => p.status === "IN_PROGRESS").length,
-      icon: Activity,
-      color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-purple-50 dark:bg-purple-950/40",
-    },
-    {
       label: "Completed",
       count: queue.filter((p) => p.status === "COMPLETED").length,
       icon: CheckCircle,
@@ -77,7 +70,7 @@ function DoctorDashboard() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((stat) => {
           const Icon = stat.icon;
 
