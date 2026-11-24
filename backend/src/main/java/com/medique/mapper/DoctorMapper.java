@@ -3,6 +3,7 @@ package com.medique.mapper;
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DoctorRequest;
 import com.medique.dto.response.DoctorAdminResponse;
+import com.medique.dto.response.DoctorReceptionistResponse;
 import com.medique.dto.response.DoctorResponse;
 import com.medique.entity.Doctor;
 
@@ -52,6 +53,21 @@ public class DoctorMapper {
     public  static List<DoctorAdminResponse> toAdminResponse(List<Doctor> doctors){
         return doctors.stream()
                 .map(DoctorMapper::toAdminResponse)
+                .toList();
+    }
+
+    public static DoctorReceptionistResponse toReceptionistResponse(Doctor doctor){
+        return DoctorReceptionistResponse.builder()
+                .doctorId(doctor.getDoctorId())
+                .doctorCode(doctor.getDoctorCode())
+                .fullName(doctor.getFullName())
+                .DepartmentName(doctor.getDepartment().getName())
+                .build();
+    }
+
+    public static List<DoctorReceptionistResponse> toReceptionistResponse(List<Doctor> doctors){
+        return doctors.stream()
+                .map(DoctorMapper::toReceptionistResponse)
                 .toList();
     }
 }

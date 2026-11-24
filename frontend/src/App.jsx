@@ -20,6 +20,8 @@ import AdminDepartments from "./pages/admin/AdminDepartments.jsx";
 import AdminDoctors from "./pages/admin/AdminDoctors.jsx";
 import AdminReceptionists from "./pages/admin/AdminReceptionists.jsx";
 import DoctorLiveQueue from "./pages/doctor/DoctorLiveQueue.jsx";
+import ReceptionistLiveQueue from "./pages/receptionist/ReceptionistLiveQueue.jsx";
+import ReceptionistQueueManagement from "./pages/receptionist/ReceptionistQueueManagement.jsx";
 
 function App() {
   return (
@@ -84,7 +86,10 @@ function App() {
             />
           }
         >
+          <Route path="book" element={<RegisterPatient receptionistMode />} />
           <Route path="dashboard" element={<ReceptionistDashboard />} />
+          <Route path="live-queue" element={<ReceptionistLiveQueue />} />
+          <Route path="queue" element={<ReceptionistQueueManagement />} />
         </Route>
       </Route>
     </Routes>

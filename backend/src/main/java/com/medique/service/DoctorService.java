@@ -2,10 +2,7 @@ package com.medique.service;
 
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DoctorRequest;
-import com.medique.dto.response.DoctorAdminResponse;
-import com.medique.dto.response.DoctorQueueResponse;
-import com.medique.dto.response.DoctorResponse;
-import com.medique.dto.response.QueueTrackingResponse;
+import com.medique.dto.response.*;
 import com.medique.entity.Department;
 import com.medique.entity.Doctor;
 import com.medique.entity.QueueToken;
@@ -237,5 +234,9 @@ public class DoctorService {
     public Boolean getAvailability() {
         Doctor doctor = getAuthenticatedDoctor();
         return doctor.isAvailable();
+    }
+
+    public List<DoctorReceptionistResponse> getActiveDoctors(){
+        return DoctorMapper.toReceptionistResponse(doctorRepository.findByIsActiveTrue());
     }
 }

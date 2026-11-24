@@ -5,6 +5,7 @@ import {
   Users,
   ShieldCheck,
   UserRoundPlus,
+  ClipboardList,
 } from "lucide-react";
 
 export const adminNavigation = [
@@ -66,6 +67,11 @@ export const receptionistNavigation = [
   {
     name: "Queue Management",
     path: "/receptionist/queue",
+    icon: ClipboardList
+  },
+  {
+    name: "LIve Queue",
+    path: "/receptionist/live-queue",
     icon: Users
   }
 ];

@@ -3,7 +3,9 @@ package com.medique.service;
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.request.ReceptionistRequest;
 import com.medique.dto.response.DoctorQueueResponse;
+import com.medique.dto.response.ReceptionistQueueTokenResponse;
 import com.medique.dto.response.ReceptionistResponse;
+import com.medique.dto.response.ReceptionistDashboardResponse;
 import com.medique.entity.QueueToken;
 import com.medique.entity.Receptionist;
 import com.medique.enums.QueueStatus;
@@ -123,4 +125,56 @@ public class ReceptionistService {
 
         return response;
     }
+
+    public ReceptionistDashboardResponse getDashboardStats() {
+
+        LocalDate today = LocalDate.now();
+
+        long appointmentsBooked =
+                queueTokenRepository.countByBookingDate(today);
+
+        List<Object[]> statusCounts =
+                queueTokenRepository.countTodayAppointmentsByStatus(today);
+
+        long waiting = 0;
+        long inProgress = 0;
+        long completed = 0;
+        long cancelled = 0;
+
+        for (Object[] row : statusCounts) {
+
+            QueueStatus status = (QueueStatus) row[0];
+            long count = (long) row[1];
+
+            switch (status) {
+                case WAITING -> waiting = count;
+                case IN_PROGRESS -> inProgress = count;
+                case COMPLETED -> completed = count;
+                case CANCELLED -> cancelled = count;
+            }
+        }
+
+        return new ReceptionistDashboardResponse(
+                appointmentsBooked,
+                waiting,
+                inProgress,
+                completed,
+                cancelled
+        );
+    }
+
+    public List<ReceptionistQueueTokenResponse> getTodayAppointments(
+            String doctorCode,
+            QueueStatus status
+    ) {
+        List<QueueToken> queueTokens =
+                queueTokenRepository.findTodayAppointments(
+                        LocalDate.now(),
+                        doctorCode,
+                        status
+                );
+
+        return QueueTokenMapper.toResponse(queueTokens);
+    }
+
 }

@@ -3,10 +3,9 @@ package com.medique.controller;
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.request.ReceptionistRequest;
 import com.medique.dto.request.TokenBookingRequest;
-import com.medique.dto.response.DoctorQueueResponse;
-import com.medique.dto.response.QueueTrackingResponse;
-import com.medique.dto.response.ReceptionistResponse;
-import com.medique.dto.response.TokenBookingResponse;
+import com.medique.dto.response.*;
+import com.medique.enums.QueueStatus;
+import com.medique.service.DoctorService;
 import com.medique.service.PatientService;
 import com.medique.service.QueueTokenService;
 import com.medique.service.ReceptionistService;
@@ -24,13 +23,16 @@ public class ReceptionistController {
     private final ReceptionistService receptionistService;
     private final PatientService patientService;
     private final QueueTokenService queueTokenService;
+    private  final DoctorService doctorService;
 
     public ReceptionistController(ReceptionistService receptionistService,
                                   PatientService patientService,
-                                  QueueTokenService queueTokenService) {
+                                  QueueTokenService queueTokenService,
+                                  DoctorService doctorService) {
         this.receptionistService = receptionistService;
         this.patientService = patientService;
         this.queueTokenService = queueTokenService;
+        this.doctorService = doctorService;
     }
 
     @GetMapping("/admin/receptionists")
@@ -82,5 +84,25 @@ public class ReceptionistController {
     @GetMapping("/receptionists/queue/{doctorCode}")
     public ResponseEntity<List<DoctorQueueResponse>> getDoctorQueue(@PathVariable String doctorCode) {
         return ResponseEntity.ok(receptionistService.getDoctorQueue(doctorCode));
+    }
+
+    @GetMapping("/receptionists/dashboard")
+    public ResponseEntity<ReceptionistDashboardResponse> getDashboardStats() {
+        return ResponseEntity.ok(receptionistService.getDashboardStats());
+    }
+
+    @GetMapping("/receptionists/doctors")
+    public ResponseEntity<List<DoctorReceptionistResponse>> getActiveDoctor() {
+        return ResponseEntity.ok(doctorService.getActiveDoctors());
+    }
+
+    @GetMapping("/receptionists/appointments")
+    public ResponseEntity<List<ReceptionistQueueTokenResponse>> getTodayAppointments(
+            @RequestParam(required = false) String doctorCode,
+            @RequestParam(required = false) QueueStatus status) {
+
+        return ResponseEntity.ok(
+                receptionistService.getTodayAppointments(doctorCode, status)
+        );
     }
 }

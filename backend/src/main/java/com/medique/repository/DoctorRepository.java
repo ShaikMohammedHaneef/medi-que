@@ -37,4 +37,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     long countByIsActiveTrue();
 
+    List<Doctor> findByIsActiveTrue();
+
 }

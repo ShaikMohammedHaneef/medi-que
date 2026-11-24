@@ -112,4 +112,18 @@ public interface QueueTokenRepository extends JpaRepository<QueueToken, Long> {
             @Param("bookingDate") LocalDate bookingDate,
             @Param("statuses") List<QueueStatus> statuses
     );
+
+    @Query("""
+    SELECT q
+    FROM QueueToken q
+    WHERE q.bookingDate = :bookingDate
+      AND (:doctorCode IS NULL OR q.doctor.doctorCode = :doctorCode)
+      AND (CAST(:status AS string) IS NULL OR q.status = :status)
+    ORDER BY q.bookedAt DESC
+    """)
+    List<QueueToken> findTodayAppointments(
+            @Param("bookingDate") LocalDate bookingDate,
+            @Param("doctorCode") String doctorCode,
+            @Param("status") QueueStatus status
+    );
 }

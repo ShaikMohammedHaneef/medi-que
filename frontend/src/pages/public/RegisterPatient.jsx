@@ -3,7 +3,7 @@ import { ClipboardList } from "lucide-react";
 import axiosInstance from "../../api/axiosInstance";
 import { Link } from "react-router";
 
-export default function RegisterPatient() {
+export default function RegisterPatient({ receptionistMode = false }) {
   const initialFormData = {
     fullName: "",
     dateOfBirth: "",
@@ -125,7 +125,10 @@ export default function RegisterPatient() {
     };
 
     try {
-      const response = await axiosInstance.post("/patients/book", requestData);
+      const endpoint = receptionistMode
+        ? "/receptionists/book"
+        : "/patients/book";
+      const response = await axiosInstance.post(endpoint, requestData);
       setBookingResult(response.data);
       setFormData(initialFormData);
       setDoctors([]);
@@ -156,8 +159,9 @@ export default function RegisterPatient() {
             </h1>
 
             <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600 dark:text-slate-400">
-              Register your details, choose a department and doctor, and book
-              your outpatient visit.
+              {receptionistMode
+                ? "Register a patient and book an outpatient appointment on their behalf."
+                : "Register your details, choose a department and doctor, and book your outpatient visit."}
             </p>
           </div>
 
