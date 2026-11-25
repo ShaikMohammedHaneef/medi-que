@@ -4,10 +4,7 @@ import com.medique.dto.request.AvailabilityRequest;
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DepartmentRequest;
 import com.medique.dto.request.DoctorRequest;
-import com.medique.dto.response.DepartmentAdminResponse;
-import com.medique.dto.response.DoctorAdminResponse;
-import com.medique.dto.response.DoctorQueueResponse;
-import com.medique.dto.response.DoctorResponse;
+import com.medique.dto.response.*;
 import com.medique.entity.Doctor;
 import com.medique.service.DoctorService;
 import org.springframework.http.ResponseEntity;
@@ -88,5 +85,10 @@ public class DoctorController {
     @GetMapping("/doctors/availability")
     public ResponseEntity<Boolean> getAvailability() {
         return ResponseEntity.ok(doctorService.getAvailability());
+    }
+
+    @GetMapping("doctors/profile")
+    public ResponseEntity<StaffProfileResponse> getDoctorProfile(){
+        return ResponseEntity.ok(doctorService.getDoctorProfile());
     }
 }

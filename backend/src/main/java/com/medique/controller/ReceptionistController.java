@@ -105,4 +105,9 @@ public class ReceptionistController {
                 receptionistService.getTodayAppointments(doctorCode, status)
         );
     }
+
+    @GetMapping("receptionist/profile")
+    public ResponseEntity<StaffProfileResponse> getReceptionistProfile() {
+        return ResponseEntity.ok(receptionistService.getReceptionistProfile());
+    }
 }

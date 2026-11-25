@@ -1,13 +1,14 @@
 package com.medique.service;
 
 import com.medique.dto.response.AdminDashboardResponse;
+import com.medique.dto.response.StaffProfileResponse;
+import com.medique.entity.Administrator;
 import com.medique.entity.QueueToken;
 import com.medique.enums.QueueStatus;
-import com.medique.repository.DepartmentRepository;
-import com.medique.repository.DoctorRepository;
-import com.medique.repository.QueueTokenRepository;
-import com.medique.repository.ReceptionistRepository;
+import com.medique.repository.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,17 +20,30 @@ public class AdminService {
     private final DoctorRepository doctorRepository;
     private final ReceptionistRepository receptionistRepository;
     private final DepartmentRepository departmentRepository;
+    private final AdministratorRepository administratorRepository;
 
     public AdminService(
             QueueTokenRepository queueTokenRepository,
             DoctorRepository doctorRepository,
             ReceptionistRepository receptionistRepository,
-            DepartmentRepository departmentRepository) {
+            DepartmentRepository departmentRepository,
+            AdministratorRepository administratorRepository) {
 
         this.queueTokenRepository = queueTokenRepository;
         this.doctorRepository = doctorRepository;
         this.receptionistRepository = receptionistRepository;
         this.departmentRepository = departmentRepository;
+        this.administratorRepository = administratorRepository;
+    }
+
+    private Administrator getAuthenticatedAdmin() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return administratorRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
     }
 
     public AdminDashboardResponse getDashboard() {
@@ -70,6 +84,19 @@ public class AdminService {
                 .activeDoctors(doctorRepository.countByIsActiveTrue())
                 .activeReceptionists(receptionistRepository.countByIsActiveTrue())
                 .activeDepartments(departmentRepository.countByIsActiveTrue())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public StaffProfileResponse getAdminProfile() {
+
+        Administrator admin = getAuthenticatedAdmin();
+
+        return StaffProfileResponse.builder()
+                .fullName(admin.getFullName())
+                .email(admin.getEmail())
+                .phoneNumber(admin.getPhoneNumber())
+                .role("ADMIN")
                 .build();
     }
 }

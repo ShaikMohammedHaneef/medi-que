@@ -1,6 +1,7 @@
 package com.medique.controller;
 
 import com.medique.dto.response.AdminDashboardResponse;
+import com.medique.dto.response.StaffProfileResponse;
 import com.medique.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +21,10 @@ public class AdminController {
     @GetMapping("/admin/dashboard")
     public ResponseEntity<AdminDashboardResponse> getDashboard() {
         return ResponseEntity.ok(adminService.getDashboard());
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<StaffProfileResponse> getAdminProfile() {
+        return ResponseEntity.ok(adminService.getAdminProfile());
     }
 }

@@ -2,6 +2,7 @@ package com.medique.mapper;
 
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.response.ReceptionistResponse;
+import com.medique.dto.response.StaffProfileResponse;
 import com.medique.entity.Receptionist;
 
 import java.util.List;
@@ -29,6 +30,15 @@ public class ReceptionistMapper {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
+                .build();
+    }
+
+    public static StaffProfileResponse toProfileResponse(Receptionist receptionist) {
+        return  StaffProfileResponse.builder()
+                .fullName(receptionist.getFullName())
+                .email(receptionist.getEmail())
+                .phoneNumber(receptionist.getPhoneNumber())
+                .role("RECEPTIONIST")
                 .build();
     }
 }

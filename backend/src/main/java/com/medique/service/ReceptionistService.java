@@ -2,10 +2,7 @@ package com.medique.service;
 
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.request.ReceptionistRequest;
-import com.medique.dto.response.DoctorQueueResponse;
-import com.medique.dto.response.ReceptionistQueueTokenResponse;
-import com.medique.dto.response.ReceptionistResponse;
-import com.medique.dto.response.ReceptionistDashboardResponse;
+import com.medique.dto.response.*;
 import com.medique.entity.QueueToken;
 import com.medique.entity.Receptionist;
 import com.medique.enums.QueueStatus;
@@ -15,8 +12,10 @@ import com.medique.mapper.QueueTokenMapper;
 import com.medique.mapper.ReceptionistMapper;
 import com.medique.repository.QueueTokenRepository;
 import com.medique.repository.ReceptionistRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,6 +36,16 @@ public class ReceptionistService {
         this.queueTokenRepository = queueTokenRepository;
     }
 
+
+    private Receptionist getAuthenticatedReceptionist() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return receptionistRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Receptionist not found"));
+    }
 
     private Receptionist findReceptionistOrThrow(Long receptionistId) {
         return receptionistRepository.findById(receptionistId)
@@ -175,6 +184,14 @@ public class ReceptionistService {
                 );
 
         return QueueTokenMapper.toResponse(queueTokens);
+    }
+
+    @Transactional(readOnly = true)
+    public StaffProfileResponse getReceptionistProfile() {
+
+        Receptionist receptionist = getAuthenticatedReceptionist();
+
+        return ReceptionistMapper.toProfileResponse(receptionist);
     }
 
 }
