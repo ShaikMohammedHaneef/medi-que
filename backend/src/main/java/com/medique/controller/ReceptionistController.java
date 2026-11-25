@@ -106,7 +106,7 @@ public class ReceptionistController {
         );
     }
 
-    @GetMapping("receptionist/profile")
+    @GetMapping("receptionists/profile")
     public ResponseEntity<StaffProfileResponse> getReceptionistProfile() {
         return ResponseEntity.ok(receptionistService.getReceptionistProfile());
     }

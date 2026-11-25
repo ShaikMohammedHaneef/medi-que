@@ -23,7 +23,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getDashboard());
     }
 
-    @GetMapping("/profile")
+    @GetMapping("admin/profile")
     public ResponseEntity<StaffProfileResponse> getAdminProfile() {
         return ResponseEntity.ok(adminService.getAdminProfile());
     }
