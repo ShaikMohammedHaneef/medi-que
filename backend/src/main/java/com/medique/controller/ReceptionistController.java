@@ -3,6 +3,7 @@ package com.medique.controller;
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.request.ReceptionistRequest;
 import com.medique.dto.request.TokenBookingRequest;
+import com.medique.dto.request.UpdateStaffProfileRequest;
 import com.medique.dto.response.*;
 import com.medique.enums.QueueStatus;
 import com.medique.service.DoctorService;
@@ -109,5 +110,12 @@ public class ReceptionistController {
     @GetMapping("receptionists/profile")
     public ResponseEntity<StaffProfileResponse> getReceptionistProfile() {
         return ResponseEntity.ok(receptionistService.getReceptionistProfile());
+    }
+
+    @PutMapping("receptionist/profile")
+    public ResponseEntity<StaffProfileResponse> updateProfile(
+            @RequestBody UpdateStaffProfileRequest request) {
+
+        return ResponseEntity.ok(receptionistService.updateReceptionistProfile(request));
     }
 }

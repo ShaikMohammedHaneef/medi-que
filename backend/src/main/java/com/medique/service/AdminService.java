@@ -1,5 +1,6 @@
 package com.medique.service;
 
+import com.medique.dto.request.UpdateStaffProfileRequest;
 import com.medique.dto.response.AdminDashboardResponse;
 import com.medique.dto.response.StaffProfileResponse;
 import com.medique.entity.Administrator;
@@ -91,6 +92,25 @@ public class AdminService {
     public StaffProfileResponse getAdminProfile() {
 
         Administrator admin = getAuthenticatedAdmin();
+
+        return StaffProfileResponse.builder()
+                .fullName(admin.getFullName())
+                .email(admin.getEmail())
+                .phoneNumber(admin.getPhoneNumber())
+                .role("ADMIN")
+                .build();
+    }
+
+    public StaffProfileResponse updateAdminProfile(
+            UpdateStaffProfileRequest request) {
+
+        Administrator admin = getAuthenticatedAdmin();
+
+        admin.setFullName(request.getFullName());
+        admin.setEmail(request.getEmail());
+        admin.setPhoneNumber(request.getPhoneNumber());
+
+        administratorRepository.save(admin);
 
         return StaffProfileResponse.builder()
                 .fullName(admin.getFullName())

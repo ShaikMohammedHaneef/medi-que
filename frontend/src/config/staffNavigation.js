@@ -30,11 +30,6 @@ export const adminNavigation = [
     path: "/admin/receptionists",
     icon: Users,
   },
-  {
-    name: "Administrators",
-    path: "/admin/administrators",
-    icon: ShieldCheck,
-  },
 ];
 
 export const doctorNavigation = [

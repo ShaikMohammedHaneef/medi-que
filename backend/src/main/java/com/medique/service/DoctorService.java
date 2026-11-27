@@ -2,6 +2,7 @@ package com.medique.service;
 
 import com.medique.dto.request.CreateDoctorRequest;
 import com.medique.dto.request.DoctorRequest;
+import com.medique.dto.request.UpdateStaffProfileRequest;
 import com.medique.dto.response.*;
 import com.medique.entity.Department;
 import com.medique.entity.Doctor;
@@ -244,6 +245,20 @@ public class DoctorService {
     @Transactional(readOnly = true)
     public StaffProfileResponse getDoctorProfile() {
         Doctor doctor = getAuthenticatedDoctor();
-        return DoctorMapper.toProfileReponse(doctor);
+        return DoctorMapper.toProfileResponse(doctor);
+    }
+
+    public StaffProfileResponse updateDoctorProfile(
+            UpdateStaffProfileRequest request) {
+
+        Doctor doctor = getAuthenticatedDoctor();
+
+        doctor.setFullName(request.getFullName());
+        doctor.setEmail(request.getEmail());
+        doctor.setPhoneNumber(request.getPhoneNumber());
+
+        doctorRepository.save(doctor);
+
+        return DoctorMapper.toProfileResponse(doctor);
     }
 }

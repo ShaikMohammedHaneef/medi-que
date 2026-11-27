@@ -72,7 +72,7 @@ public class DoctorMapper {
                 .toList();
     }
 
-    public static StaffProfileResponse toProfileReponse(Doctor doctor) {
+    public static StaffProfileResponse toProfileResponse(Doctor doctor) {
         return StaffProfileResponse.builder()
                 .fullName(doctor.getFullName())
                 .email(doctor.getEmail())

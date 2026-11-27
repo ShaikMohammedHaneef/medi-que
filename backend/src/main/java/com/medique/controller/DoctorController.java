@@ -1,9 +1,6 @@
 package com.medique.controller;
 
-import com.medique.dto.request.AvailabilityRequest;
-import com.medique.dto.request.CreateDoctorRequest;
-import com.medique.dto.request.DepartmentRequest;
-import com.medique.dto.request.DoctorRequest;
+import com.medique.dto.request.*;
 import com.medique.dto.response.*;
 import com.medique.entity.Doctor;
 import com.medique.service.DoctorService;
@@ -90,5 +87,14 @@ public class DoctorController {
     @GetMapping("doctors/profile")
     public ResponseEntity<StaffProfileResponse> getDoctorProfile(){
         return ResponseEntity.ok(doctorService.getDoctorProfile());
+    }
+
+    @PutMapping("doctors/profile")
+    public ResponseEntity<StaffProfileResponse> updateProfile(
+            @RequestBody UpdateStaffProfileRequest request) {
+
+        return ResponseEntity.ok(
+                doctorService.updateDoctorProfile(request)
+        );
     }
 }

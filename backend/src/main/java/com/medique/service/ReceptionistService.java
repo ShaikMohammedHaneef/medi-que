@@ -2,7 +2,9 @@ package com.medique.service;
 
 import com.medique.dto.request.CreateReceptionistRequest;
 import com.medique.dto.request.ReceptionistRequest;
+import com.medique.dto.request.UpdateStaffProfileRequest;
 import com.medique.dto.response.*;
+import com.medique.entity.Administrator;
 import com.medique.entity.QueueToken;
 import com.medique.entity.Receptionist;
 import com.medique.enums.QueueStatus;
@@ -12,6 +14,7 @@ import com.medique.mapper.QueueTokenMapper;
 import com.medique.mapper.ReceptionistMapper;
 import com.medique.repository.QueueTokenRepository;
 import com.medique.repository.ReceptionistRepository;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,7 +52,7 @@ public class ReceptionistService {
 
     private Receptionist findReceptionistOrThrow(Long receptionistId) {
         return receptionistRepository.findById(receptionistId)
-                .orElseThrow(() -> new ReceptionistNotFoundException( "Receptionist not found with id: " + receptionistId));
+                .orElseThrow(() -> new ReceptionistNotFoundException("Receptionist not found with id: " + receptionistId));
     }
 
     public List<ReceptionistResponse> getReceptionists() {
@@ -194,4 +197,17 @@ public class ReceptionistService {
         return ReceptionistMapper.toProfileResponse(receptionist);
     }
 
+    public StaffProfileResponse updateReceptionistProfile(UpdateStaffProfileRequest request) {
+
+        Receptionist receptionist = getAuthenticatedReceptionist();
+
+        receptionist.setFullName(request.getFullName());
+        receptionist.setEmail(request.getEmail());
+        receptionist.setPhoneNumber(request.getPhoneNumber());
+
+        receptionistRepository.save(receptionist);
+
+        return ReceptionistMapper.toProfileResponse(receptionist);
+
+    }
 }
